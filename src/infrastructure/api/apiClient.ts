@@ -48,4 +48,28 @@ export class ApiClient {
       }
     }
   }
+
+  async get<T>(endpoint: string): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: 'GET' })
+  }
+
+  async post<T>(endpoint: string, body: unknown): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'POST',
+      data: body,
+    })
+  }
+
+  async put<T>(endpoint: string, body: unknown): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, {
+      method: 'PUT',
+      data: body,
+    })
+  }
+
+  async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
+    return this.request<T>(endpoint, { method: 'DELETE' })
+  }
 }
+
+export const apiClient = new ApiClient()
