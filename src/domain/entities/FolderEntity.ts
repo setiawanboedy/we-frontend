@@ -7,7 +7,10 @@ export class FolderEntity {
     public readonly size: number | null = null,
     public readonly createdAt: Date = new Date(),
     public readonly updatedAt: Date = new Date(),
-  ) {}
+  ) {
+    this.validateName(name)
+    this.validatePath(path)
+  }
 
   private validateName(name: string): void {
     if (!name || name.trim().length === 0) {
