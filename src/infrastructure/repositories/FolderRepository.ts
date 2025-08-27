@@ -4,8 +4,20 @@ import type { FolderEntity } from '@/domain/entities/FolderEntity'
 import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
 import { folderApiService } from '../api/folderApi'
 import { FolderMappingService } from '@/application/services/FolderMappingService'
+import { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
 
 export class FolderRepository implements IFolderRepository {
+  async getAllWithHierarchy(): Promise<FolderHierarchy> {
+    const response = await folderApiService.getAllFolders()
+
+    if (!response.success || !response.data) {
+      throw new Error(response.error || 'Failed to get folder hierarchy')
+    }
+    const nodes = response.data.map((folder) =>
+      FolderMappingService.folderWithChildrenToNode(folder),
+    )
+    return new FolderHierarchy(nodes)
+  }
   async getById(id: string): Promise<FolderEntity | null> {
     const response = await folderApiService.getFolderById(id)
 
