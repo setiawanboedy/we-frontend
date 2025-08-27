@@ -1,35 +1,175 @@
-@import './base.css';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-#app {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 2rem;
-  font-weight: normal;
-}
-
-a,
-.green {
-  text-decoration: none;
-  color: hsla(160, 100%, 37%, 1);
-  transition: 0.4s;
-  padding: 3px;
-}
-
-@media (hover: hover) {
-  a:hover {
-    background-color: hsla(160, 100%, 37%, 0.2);
+/* Windows Explorer Theme */
+@layer base {
+  html {
+    font-family: 'Segoe UI', system-ui, sans-serif;
   }
-}
 
-@media (min-width: 1024px) {
   body {
-    display: flex;
-    place-items: center;
+    background-color: #f3f2f1;
+    color: #323130;
+  }
+}
+
+
+@layer components {
+  /* Windows Explorer specific components */
+  .win-button {
+    @apply px-3 py-1.5 bg-white border border-win-border rounded-win text-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-win-blue focus:ring-opacity-50 transition-colors;
   }
 
-  #app {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    padding: 0 2rem;
+  /* Mobile-optimized button */
+  @media (max-width: 768px) {
+    .win-button {
+      @apply px-2 py-2 min-h-[44px] min-w-[44px] flex items-center justify-center;
+    }
+  }
+
+  .win-button-primary {
+    @apply bg-win-blue text-white border-win-blue hover:bg-win-hover;
+  }
+
+  .win-button-danger {
+    @apply text-red-600 border-red-300 hover:bg-red-50 hover:border-red-400;
+  }
+
+  .win-button:disabled {
+    @apply opacity-50 cursor-not-allowed hover:bg-white;
+  }
+
+  .win-toolbar {
+    @apply bg-white border-b border-win-border px-4 py-2 shadow-sm;
+  }
+
+  .win-sidebar {
+    @apply bg-win-light border-r border-win-border;
+  }
+
+  .win-listitem {
+    @apply hover:bg-blue-50 cursor-pointer rounded text-sm transition-colors;
+  }
+
+  .win-listitem-selected {
+    @apply bg-blue-100 border border-blue-300;
+  }
+
+  .win-input {
+    @apply bg-white border border-win-border rounded-win px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-win-blue focus:ring-opacity-50 focus:border-win-blue;
+  }
+
+  .win-card {
+    @apply bg-white border border-win-border rounded-win shadow-win;
+  }
+
+  .win-menu {
+    @apply bg-white border border-win-border rounded-win shadow-win py-1;
+  }
+
+  .win-menu-item {
+    @apply px-4 py-2 text-sm hover:bg-gray-100 cursor-pointer;
+  }
+}
+
+@layer utilities {
+  .drag-ghost {
+    @apply opacity-50;
+  }
+
+  .drop-zone {
+    @apply bg-blue-100 border-2 border-dashed border-blue-300;
+  }
+
+  .file-selected {
+    @apply bg-blue-100 border border-blue-300;
+  }
+}
+
+/* Custom scrollbar styles for webkit browsers */
+.win-scrollbar::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.win-scrollbar::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.win-scrollbar::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.win-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Context menu animation */
+.context-menu-enter-active,
+.context-menu-leave-active {
+  transition: all 0.15s ease;
+}
+
+.context-menu-enter-from,
+.context-menu-leave-to {
+  opacity: 0;
+  transform: scale(0.95);
+}
+
+/* File icon colors */
+.file-icon-word {
+  color: #2b579a;
+}
+
+.file-icon-excel {
+  color: #217346;
+}
+
+.file-icon-powerpoint {
+  color: #d24726;
+}
+
+.file-icon-pdf {
+  color: #dc3545;
+}
+
+.file-icon-image {
+  color: #7c3aed;
+}
+
+.file-icon-code {
+  color: #6366f1;
+}
+
+.file-icon-archive {
+  color: #6b7280;
+}
+
+.file-icon-folder {
+  color: #f59e0b;
+}
+
+/* Mobile responsiveness additions */
+@media (max-width: 768px) {
+  /* Touch-friendly interactions */
+  .win-listitem {
+    @apply min-h-[48px];
+  }
+
+  /* Ensure mobile taps are registered */
+  * {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+  }
+
+  /* Hide scrollbars on mobile for cleaner look */
+  .win-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+
+  .win-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
   }
 }
