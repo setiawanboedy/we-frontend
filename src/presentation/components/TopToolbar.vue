@@ -1,54 +1,219 @@
 <script setup lang="ts">
-import BreadcrumbNav from '@/presentation/components/BreadcrumbNav.vue';
+import BreadcrumbNav from '@/presentation/components/BreadcrumbNav.vue'
+import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { useFolderStore } from '../stores/folderStore'
 
+const folderStore = useFolderStore()
+const hasMainFolderSelected = computed(() => !!folderStore.selectedMainFolderId)
 
+interface Props {
+  currentPath: string
+  searchQuery: string
+  canGoBack?: boolean
+  canGoForward?: boolean
+  selectedFiles?: string[]
+  hasSelection?: boolean
+}
+
+interface Emits {
+  (e: 'navigate-back'): void
+  (e: 'navigate-forward'): void
+  (e: 'search', query: string): void
+  (e: 'navigate-to', path: string): void
+  (e: 'rename-file', fileId: string): void
+  (e: 'delete-files', fileIds: string): void
+  (e: 'create-item', type: 'folder' | 'file'): void
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  canGoBack: true,
+  canGoForward: false,
+  selectedFiles: () => [],
+  hasSelection: false,
+})
+
+const emit = defineEmits<Emits>()
+
+const showDropdown = ref(false)
+let searchTimeout: number | null = null
+const searchInput = ref<HTMLInputElement | null>(null)
+
+const handleSearchInput = (event: Event) => {
+  const target = event.target as HTMLInputElement
+  const query = target.value
+
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+
+  searchTimeout = setTimeout(() => {
+    emit('search', query)
+  }, 300)
+}
+
+const clearSearch = () => {
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+    searchTimeout = null
+  }
+  emit('search', '')
+}
+
+const handleBreadcrumbClick = (path: string) => {
+  emit('navigate-to', path)
+}
+
+const createItem = (type: 'file' | 'folder') => {
+  showDropdown.value = false
+  emit('create-item', type)
+}
+
+const handleRenameFile = () => {
+  if (folderStore.selectedMainFolderId) {
+    emit('rename-file', folderStore.selectedMainFolderId)
+  }
+}
+
+const handleDeleteFiles = () => {
+  if (folderStore.selectedMainFolderId) {
+    emit('delete-files', folderStore.selectedMainFolderId)
+  }
+}
+
+const closeDropdown = (event: Event) => {
+  const target = event.target as HTMLElement
+  if (!target.closest('.relative')) {
+    showDropdown.value = false
+  }
+}
+
+const handleKeydown = (event: KeyboardEvent) => {
+  if (event.ctrlKey && event.key === 'f') {
+    event.preventDefault()
+    searchInput.value?.focus()
+  }
+
+  if (event.key === 'Escape' && props.searchQuery) {
+    event.preventDefault()
+    clearSearch()
+  }
+
+  if (event.altKey && event.key === 'ArrowLeft' && props.canGoBack) {
+    event.preventDefault()
+    emit('navigate-back')
+  }
+
+  if (event.altKey && event.key === 'ArrowRight' && props.canGoForward) {
+    event.preventDefault()
+    emit('navigate-forward')
+  }
+
+  onMounted(() => {
+    if (typeof window !== 'undefined') {
+      document.addEventListener('click', closeDropdown)
+      document.addEventListener('keydown', handleKeydown)
+    }
+  })
+
+  onUnmounted(() => {
+    if (typeof window !== 'undefined') {
+      document.removeEventListener('click', closeDropdown)
+      document.removeEventListener('keydown', handleKeydown)
+    }
+    if (searchTimeout) {
+      clearTimeout(searchTimeout)
+    }
+  })
+}
+
+onMounted(() => {
+  if (typeof window !== 'undefined') {
+    document.addEventListener('click', closeDropdown)
+    document.addEventListener('keydown', handleKeydown)
+  }
+})
+
+onUnmounted(() => {
+  if (typeof window !== 'undefined') {
+    document.removeEventListener('click', closeDropdown)
+    document.removeEventListener('keydown', handleKeydown)
+  }
+  if (searchTimeout) {
+    clearTimeout(searchTimeout)
+  }
+})
 </script>
 
 <template>
   <div class="win-toolbar">
     <div class="flex items-center space-x-4">
       <div class="flex space-x-1">
-        <button class="win-button" title="Back">
+        <button class="win-button" title="Back" @click="$emit('navigate-back')" :disabled="!canGoBack">
           <i class="fas fa-arrow-left text-gray-600"></i>
         </button>
-        <button class="win-button" title="Forward">
+        <button class="win-button" title="Forward" @click="$emit('navigate-forward')" :disabled="!canGoForward">
           <i class="fas fa-arrow-right text-gray-600"></i>
         </button>
       </div>
-      
-      <div class="flex space-x-2">
-        <button class="win-button" title="Rename">
+
+      <div v-if="hasMainFolderSelected" class="flex space-x-2">
+        <button class="win-button" title="Rename" @click="handleRenameFile">
           <i class="fas fa-edit text-gray-600 mr-1"></i>
           <span class="text-sm">Rename</span>
         </button>
-        <button class="win-button win-button-danger" title="Delete">
+        <button class="win-button win-button-danger" title="Delete" @click="handleDeleteFiles">
           <i class="fas fa-trash text-red-600 mr-1"></i>
           <span class="text-sm">Delete</span>
         </button>
       </div>
-      
+
       <div class="relative">
-        <button class="win-button">
-             <i class="fas fa-plus text-green-600"></i>
+        <button class="win-button" @click="showDropdown = !showDropdown">
+          <i class="fas fa-plus text-green-600"></i>
         </button>
         <!-- dropdown -->
+         <div
+          v-if="showDropdown"
+          class="absolute z-10 mt-2 bg-white border border-gray-300 rounded shadow-lg min-w-[120px]"
+        >
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            @click="createItem('folder')"
+          >
+            Folder
+          </button>
+          <button
+            class="block w-full text-left px-4 py-2 hover:bg-gray-100"
+            @click="createItem('file')"
+          >
+            File
+          </button>
+        </div>
       </div>
 
       <div class="flex-1 flex items-center win-input bg-white border-gray-300 rounded px-3 py-2">
         <i class="fas fa-desktop text-gray-500 mr-2"></i>
         <!-- Breadcrum -->
-        <BreadcrumbNav />
+        <BreadcrumbNav :path="currentPath" @navigate-to="handleBreadcrumbClick"/>
       </div>
 
-      <div class="flex items-center win-input bg-white border border-gray-300 rounded px-3 py-2 w-64">
-        <i class="fas fa-search text-gray-400 mr-2"></i>
+      <div
+        class="flex items-center win-input bg-white border border-gray-300 rounded px-3 py-2 w-64"
+      >
+        <i v-if="!folderStore.isSearching" class="fas fa-search text-gray-400 mr-2"></i>
+        <i v-else class="fas fa-spinner fa-spin text-gray-400 mr-2"></i>
         <input
           ref="searchInput"
           type="text"
           placeholder="Search folders... (Ctrl+F)"
           class="flex-1 text-sm outline-none bg-transparent"
+          :value="searchQuery"
+          @input="handleSearchInput"
+          @keyup.escape="clearSearch"
         />
         <button
+          v-if="searchQuery"
+          @click="clearSearch"
           class="ml-2 text-gray-400 hover:text-gray-600"
           title="Clear search"
         >
@@ -56,6 +221,5 @@ import BreadcrumbNav from '@/presentation/components/BreadcrumbNav.vue';
         </button>
       </div>
     </div>
-
   </div>
 </template>
