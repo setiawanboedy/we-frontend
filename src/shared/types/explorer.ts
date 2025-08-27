@@ -11,3 +11,15 @@ export interface Folder {
 export interface FolderWithChildren extends Folder {
   children: FolderWithChildren[]
 }
+
+export interface FolderItem {
+  id: string
+  name: string
+  size: string
+  icon: string
+  children?: FolderItem[]
+  isExpanded?: boolean
+  path?: string
+  updateAt: string
+  parentId?: string | null
+}
