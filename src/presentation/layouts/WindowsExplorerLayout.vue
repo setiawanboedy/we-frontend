@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import Sidebar from '../components/Sidebar.vue';
-import ToolbarView from '../components/Toolbar.vue';
+import StatusBar from '../components/StatusBar.vue';
+import ToolbarView from '../components/TopToolbar.vue';
 
 
 </script>
@@ -10,7 +11,7 @@ import ToolbarView from '../components/Toolbar.vue';
         <!-- Toolbar -->
          <ToolbarView />
          <!-- Main content -->
-          <div class="flex flex-1 bg-white shadow-lg mx-4 overflow-hidden">
+          <div class="flex flex-1 bg-white shadow-lg overflow-hidden">
             <!-- Sidebar -->
              <Sidebar />
              <!-- Main area -->
@@ -20,6 +21,6 @@ import ToolbarView from '../components/Toolbar.vue';
           </div>
 
           <!-- status bar -->
-           <div>Status bar</div>
+           <StatusBar />
     </div>
 </template>
