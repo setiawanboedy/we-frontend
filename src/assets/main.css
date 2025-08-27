@@ -49,7 +49,7 @@
   }
 
   .win-listitem {
-    @apply hover:bg-blue-50 cursor-pointer rounded text-sm transition-colors;
+    @apply hover:bg-blue-50 cursor-default rounded text-sm transition-colors;
   }
 
   .win-listitem-selected {
