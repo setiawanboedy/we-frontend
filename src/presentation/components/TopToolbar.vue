@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import BreadcrumbNav from '@/presentation/components/BreadcrumbNav.vue'
-import { computed, onMounted, onUnmounted, ref } from 'vue'
+import { computed, ref } from 'vue'
 import { useFolderStore } from '../stores/folderStore'
 
 const folderStore = useFolderStore()
@@ -25,7 +25,7 @@ interface Emits {
   (e: 'create-item', type: 'folder' | 'file'): void
 }
 
-const props = withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<Props>(), {
   canGoBack: true,
   canGoForward: false,
   selectedFiles: () => [],
@@ -80,68 +80,8 @@ const handleDeleteFiles = () => {
   }
 }
 
-const closeDropdown = (event: Event) => {
-  const target = event.target as HTMLElement
-  if (!target.closest('.relative')) {
-    showDropdown.value = false
-  }
-}
 
-const handleKeydown = (event: KeyboardEvent) => {
-  if (event.ctrlKey && event.key === 'f') {
-    event.preventDefault()
-    searchInput.value?.focus()
-  }
 
-  if (event.key === 'Escape' && props.searchQuery) {
-    event.preventDefault()
-    clearSearch()
-  }
-
-  if (event.altKey && event.key === 'ArrowLeft' && props.canGoBack) {
-    event.preventDefault()
-    emit('navigate-back')
-  }
-
-  if (event.altKey && event.key === 'ArrowRight' && props.canGoForward) {
-    event.preventDefault()
-    emit('navigate-forward')
-  }
-
-  onMounted(() => {
-    if (typeof window !== 'undefined') {
-      document.addEventListener('click', closeDropdown)
-      document.addEventListener('keydown', handleKeydown)
-    }
-  })
-
-  onUnmounted(() => {
-    if (typeof window !== 'undefined') {
-      document.removeEventListener('click', closeDropdown)
-      document.removeEventListener('keydown', handleKeydown)
-    }
-    if (searchTimeout) {
-      clearTimeout(searchTimeout)
-    }
-  })
-}
-
-onMounted(() => {
-  if (typeof window !== 'undefined') {
-    document.addEventListener('click', closeDropdown)
-    document.addEventListener('keydown', handleKeydown)
-  }
-})
-
-onUnmounted(() => {
-  if (typeof window !== 'undefined') {
-    document.removeEventListener('click', closeDropdown)
-    document.removeEventListener('keydown', handleKeydown)
-  }
-  if (searchTimeout) {
-    clearTimeout(searchTimeout)
-  }
-})
 </script>
 
 <template>
