@@ -1,6 +1,5 @@
 import type {
   FileDto,
-  FileWithContentDto,
 } from '@/application/dto/FileDto'
 
 export interface IFileSearchService {
@@ -10,5 +9,5 @@ export interface IFileSearchService {
 
 export interface IFileDataService {
   loadFilesByFolder(folderId: string): Promise<FileDto[]>
-  loadFile(fileId: string): Promise<FileWithContentDto>
+  loadFile(fileId: string): Promise<FileDto>
 }
