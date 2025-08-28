@@ -37,7 +37,7 @@ export class ApiClient {
       let details = ''
       if (axios.isAxiosError(error)) {
         errorMsg = error.message
-        details = error.response?.data?.message || ''
+        details = error.response?.data?.message || error.response?.data?.error || ''
       } else if (error instanceof Error) {
         errorMsg = error.message
       }
@@ -68,7 +68,7 @@ export class ApiClient {
   }
 
   async delete<T>(endpoint: string): Promise<ApiResponse<T>> {
-    return this.request<T>(endpoint, { method: 'DELETE' })
+    return this.request<T>(endpoint,{ method: 'DELETE' })
   }
 }
 
