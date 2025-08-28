@@ -193,7 +193,6 @@ const clearSelection = () => {
   fileStore.clearFileSelection()
 }
 
-
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
   return date.toLocaleDateString('en-US', {
@@ -208,7 +207,8 @@ const formatDate = (dateString: string): string => {
 
 <template>
   <div class="flex-1 bg-white" @keydown="handleKeyDown" tabindex="0">
-    <div class="bg-gray-50 border-b border-gray-200 px-4 py-2">
+    <!-- Desktop Header -->
+    <div class="hidden md:block bg-gray-50 border-b border-gray-200 px-4 py-2">
       <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-600">
         <div
           class="col-span-6 cursor-pointer hover:text-gray-800 flex items-center"
@@ -277,7 +277,30 @@ const formatDate = (dateString: string): string => {
       </div>
     </div>
 
-    <div class="p-4 win-scrollbar overflow-auto">
+    <!-- Mobile Header -->
+    <div class="md:hidden bg-gray-50 border-b border-gray-200 px-3 py-2">
+      <div class="flex items-center justify-between text-sm font-medium text-gray-600">
+        <span>Items</span>
+        <div class="flex items-center space-x-2">
+          <button
+            class="p-1 rounded hover:bg-gray-200"
+            @click="sortBy('name')"
+            :class="{ 'text-blue-600': currentSort === 'name' }"
+          >
+            <i class="fas fa-sort-alpha-down text-xs"></i>
+          </button>
+          <button
+            class="p-1 rounded hover:bg-gray-200"
+            @click="sortBy('date')"
+            :class="{ 'text-blue-600': currentSort === 'date' }"
+          >
+            <i class="fas fa-sort-numeric-down text-xs"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div class="px-3 md:px-4 py-2 win-scrollbar overflow-auto">
       <div
         v-if="folderStore.isSearching || fileStore.isSearching"
         class="flex items-center justify-center py-8"
@@ -366,20 +389,24 @@ const formatDate = (dateString: string): string => {
             v-for="folder in sortedFolders"
             :key="`folder-${folder.id}`"
             :class="[
-              'flex items-center space-x-4 py-2 px-3 rounded cursor-default transition-colors',
-              folderStore.selectedMainFolderId === folder.id
-                ? 'bg-blue-100'
-                : 'hover:bg-blue-50',
+              'flex items-center py-2 px-3 rounded cursor-default transition-colors',
+              folderStore.selectedMainFolderId === folder.id ? 'bg-blue-100' : 'hover:bg-blue-50',
             ]"
             @click="selectHighlight(folder)"
             @dblclick="handleFolderSelect(folder)"
           >
-            <i class="fas fa-folder text-yellow-500 w-5"></i>
-            <div class="flex-1 grid grid-cols-12 gap-4 text-sm">
+            <i class="fas fa-folder text-yellow-500 w-5 mr-3 flex-shrink-0"></i>
+            <!-- Desktop Layout -->
+            <div class="hidden md:grid flex-1 grid-cols-12 gap-4 text-sm">
               <div class="col-span-6 font-medium">{{ folder.name }}</div>
               <div class="col-span-2 text-gray-500">{{ folder.updateAt }}</div>
               <div class="col-span-2 text-gray-500">Folder</div>
               <div class="col-span-2 text-gray-500">{{ folder.size }}</div>
+            </div>
+            <!-- Mobile Layout -->
+            <div class="md:hidden flex-1 min-w-0">
+              <div class="font-medium text-sm truncate">{{ folder.name }}</div>
+              <div class="text-xs text-gray-500 mt-1">{{ folder.updateAt || 'Folder' }}</div>
             </div>
           </div>
         </div>
@@ -391,21 +418,23 @@ const formatDate = (dateString: string): string => {
             v-for="file in sortedFiles"
             :key="`file-${file.id}`"
             :class="[
-              'flex items-center space-x-4 py-2 px-3 rounded cursor-default transition-colors',
-              fileStore.selectedFileIds.includes(file.id)
-                ? 'bg-blue-100 '
-                : 'hover:bg-blue-50',
+              'flex items-center py-2 px-3 rounded cursor-default transition-colors',
+              fileStore.selectedFileIds.includes(file.id) ? 'bg-blue-100 ' : 'hover:bg-blue-50',
             ]"
             @click="selectHighlightFile(file.id)"
           >
-            <i class="fas fa-file text-gray-500 w-5"></i>
-            <div class="flex-1 grid grid-cols-12 gap-4 text-sm">
+            <i class="fas fa-file text-gray-500 w-5 mr-3 flex-shrink-0"></i>
+            <!-- Desktop Layout -->
+            <div class="hidden md:grid flex-1 grid-cols-12 gap-4 text-sm">
               <div class="col-span-6 font-medium">{{ file.name }}</div>
               <div class="col-span-2 text-gray-500">{{ formatDate(file.updatedAt) }}</div>
-              <div class="col-span-2 text-gray-500">plain/text</div>
-              <div class="col-span-2 text-gray-500">
-                1Kb
-              </div>
+              <div class="col-span-2 text-gray-500">Text Document</div>
+              <div class="col-span-2 text-gray-500">1Kb</div>
+            </div>
+            <!-- Mobile Layout -->
+            <div class="md:hidden flex-1 min-w-0">
+              <div class="font-medium text-sm truncate">{{ file.name }}</div>
+              <div class="text-xs text-gray-500 mt-1">{{ formatDate(file.updatedAt) }}</div>
             </div>
           </div>
         </div>

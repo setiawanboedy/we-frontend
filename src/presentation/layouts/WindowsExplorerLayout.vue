@@ -11,6 +11,7 @@ const folderStore = useFolderStore()
 const fileStore = useFileStore()
 const renameModalVisible = ref(false)
 const renameInput = ref('')
+const sidebarVisible = ref(false)
 let renameTargetId: string | null = null
 let renameTargetType: 'folder' | 'file' | null = null
 
@@ -113,6 +114,10 @@ const handleDeleteFolder = (folderId: string) => {
   deleteMessage.value = 'Are you sure you want to delete this folder? This action cannot be undone.'
   deleteModalVisible.value = true
 }
+
+const toggleSidebar = () => {
+  sidebarVisible.value = !sidebarVisible.value
+}
 </script>
 
 <template>
@@ -134,13 +139,35 @@ const handleDeleteFolder = (folderId: string) => {
       @delete-files="handleDeleteFiles"
       @delete-folder="handleDeleteFolder"
       @create-item="handleCreateItem"
+      @toggle-sidebar="toggleSidebar"
     />
     <!-- Main content -->
-    <div class="flex flex-1 bg-white shadow-lg overflow-hidden">
-      <!-- Sidebar -->
-      <Sidebar />
+    <div class="flex flex-1 bg-white shadow-lg overflow-hidden relative">
+      <!-- Mobile Sidebar Overlay -->
+      <div
+        v-if="sidebarVisible"
+        class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+        @click="sidebarVisible = false"
+      ></div>
+
+      <!-- Sidebar - Hidden on mobile, shown on tablet+ -->
+      <div class="hidden md:block">
+        <Sidebar />
+      </div>
+
+      <!-- Mobile Sidebar -->
+      <div
+        :class="[
+          'fixed left-0 top-0 h-full bg-white z-50 transform transition-transform duration-300 md:hidden',
+          sidebarVisible ? 'translate-x-0' : '-translate-x-full',
+        ]"
+        style="padding-top: 60px"
+      >
+        <Sidebar />
+      </div>
+
       <!-- Main area -->
-      <div class="flex-1">
+      <div class="flex-1 min-w-0">
         <slot />
       </div>
     </div>

@@ -24,8 +24,8 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="w-64 win-sidebar">
-    <div class="p-4">
+  <div class="w-64 h-screen win-sidebar">
+    <div class="p-2 md:p-4">
       <!-- Sidebar folder -->
       <div v-if="folderStore.isLoadingSidebar" class="flex items-center justify-center py-8">
         <div class="text-sm text-gray-500">Loading folders...</div>
