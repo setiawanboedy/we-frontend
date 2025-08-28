@@ -70,12 +70,15 @@ export class FolderActions {
         )
       }
 
+      const folderPath = selectedFolderNode.path
+        ? `${selectedFolderNode.path}/${uniqueName}`
+        : uniqueName
+
       const folderData = {
         name: uniqueName,
-        path: selectedFolderNode.path ? `${selectedFolderNode.path}/${uniqueName}` : uniqueName,
+        path: folderPath,
         parentId: this.state.selectedFolderId.value,
       }
-
       return await this.createFolder(folderData)
     } catch (error) {
       return ResultFormatter.error(error, 'membuat folder baru')

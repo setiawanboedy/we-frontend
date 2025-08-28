@@ -6,10 +6,12 @@ import { FileSelectionActions } from './actions/FileSelectionActions'
 import { FileSearchActions } from './actions/FileSearchActions'
 import { FileComputed } from './computed/FileComputed'
 import { FileActions } from './actions/FileActions'
+import { useFolderStore } from './folderStore'
 
 export const useFileStore = defineStore('files', () => {
   const fileService = getFileService()
   const fileSearchService = getFileSearchService()
+  const folderStore = useFolderStore()
 
   const state = new FileState()
 
@@ -19,7 +21,7 @@ export const useFileStore = defineStore('files', () => {
 
   const computed = new FileComputed(state)
 
-  const crudActions = new FileActions(state, fileService, loadingActions)
+  const crudActions = new FileActions(state, fileService, loadingActions, folderStore)
 
   return {
     ...state,
@@ -47,6 +49,5 @@ export const useFileStore = defineStore('files', () => {
     updateFile: crudActions.updateFile.bind(crudActions),
     deleteFile: crudActions.deleteFile.bind(crudActions),
     renameFile: crudActions.renameFile.bind(crudActions),
-
   }
 })

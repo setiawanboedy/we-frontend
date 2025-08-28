@@ -3,12 +3,14 @@ import type { FileState } from '../state/FileState'
 import type { CreateFileRequest, UpdateFileRequest } from '@/application/dto/FileDto'
 import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 import type { IFileDataService } from '@/domain/interfaces/IFileServices'
+import { getFolderService } from '@/di/InjectionRegistry'
 
 export class FileActions {
   constructor(
     private state: FileState,
     private applicationService: ApplicationFileService,
     private loadingActions: IFileDataService,
+    private folderStore?: any,
   ) {}
 
   async createFile(data: CreateFileRequest): Promise<any> {
@@ -33,30 +35,37 @@ export class FileActions {
   }
 
   generateUniqueFileName(baseName: string = 'New File.txt'): string {
-    const existingNames = this.state.files.value.map((file) => file.name.toLowerCase())
-    const baseNameLower = baseName.toLowerCase()
+    if (this.state.files.value.length === 0) {
+      return baseName
+    }
 
-    if (!existingNames.includes(baseNameLower)) {
+    const existingNames = this.state.files.value.map((file) => file.name.toLowerCase())
+
+    if (!existingNames.includes(baseName.toLowerCase())) {
       return baseName
     }
 
     const nameParts = baseName.split('.')
-    const extension = nameParts.length > 1 ? nameParts.pop() : ''
-    const baseNameWithoutExt = nameParts.join('.')
+    let extension = ''
+    let nameWithoutExt = baseName
 
-    let counter = 1
-    let newName = `${baseNameWithoutExt} (${counter}).${extension}`
-    let newNameLower = newName.toLowerCase()
-
-    while (existingNames.includes(newNameLower)) {
-      counter++
-      newName = `${baseNameWithoutExt} (${counter}).${extension}`
-      newNameLower = newName.toLowerCase()
+    if (nameParts.length > 1) {
+      extension = nameParts.pop() || ''
+      nameWithoutExt = nameParts.join('.')
     }
 
-    return newName
-  }
+    let counter = 1
+    while (true) {
+      const numberedName = extension
+        ? `${nameWithoutExt} (${counter}).${extension}`
+        : `${nameWithoutExt} (${counter})`
 
+      if (!existingNames.includes(numberedName.toLowerCase())) {
+        return numberedName
+      }
+      counter++
+    }
+  }
   async createNewFile(folderId?: string): Promise<any> {
     const targetFolderId = folderId || this.state.currentFolderId.value
 
@@ -65,11 +74,36 @@ export class FileActions {
     }
 
     try {
+      await this.loadingActions.loadFilesByFolder(targetFolderId)
+
       const uniqueName = this.generateUniqueFileName()
+
+      let folderPath = ''
+      try {
+        const folderService = getFolderService()
+        const folderHierarchy = await folderService.getFolderHierarchy()
+
+        const folderNode = folderHierarchy.find((h) => h.id === targetFolderId)
+
+        if (folderNode) {
+          folderPath = folderNode.path || ''
+        }
+      } catch (error) {
+        console.error('Error getting folder hierarchy:', error)
+      }
+
+      let filePath = ''
+      if (folderPath) {
+        filePath = folderPath.startsWith('/')
+          ? `${folderPath}/${uniqueName}`
+          : `/${folderPath}/${uniqueName}`
+      } else {
+        filePath = `/${uniqueName}`
+      }
 
       const fileData: CreateFileRequest = {
         name: uniqueName,
-        path: `/${uniqueName}`,
+        path: filePath,
         folderId: targetFolderId,
         size: 0,
         mimeType: 'text/plain',

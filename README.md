@@ -139,3 +139,42 @@ bun test:e2e
 ```sh
 bun lint
 ```
+=== CREATE NEW FILE DEBUG ===
+FileActions.ts?t=1756375225977:52 folderId parameter: cmev8322o0003ycrbnzlanbn2
+FileActions.ts?t=1756375225977:53 state.currentFolderId: cmev8322o0003ycrbnzlanbn2
+FileActions.ts?t=1756375225977:54 final targetFolderId: cmev8322o0003ycrbnzlanbn2
+FileActions.ts?t=1756375225977:62 uniqueName generated: New File.txt-copy
+FileActions.ts?t=1756375225977:72 folderPath: 
+FileActions.ts?t=1756375225977:81 final filePath: /New File.txt-copy
+FileActions.ts?t=1756375225977:89 fileData to create: {name: 'New File.txt-copy', path: '/New File.txt-copy', folderId: 'cmev8322o0003ycrbnzlanbn2', size: 0, mimeType: 'text/plain'}
+FileActions.ts?t=1756375225977:17 {id: 'cmev8h9rj001iycrbl9z1gmmf', name: 'New File.txt-copy', path: '/New File.txt-copy', folderId: 'cmev8322o0003ycrbnzlanbn2', size: 0, …}
+FileActions.ts?t=1756375225977:51 === CREATE NEW FILE DEBUG ===
+FileActions.ts?t=1756375225977:52 folderId parameter: cmev8322n0002ycrbuersu7uq
+FileActions.ts?t=1756375225977:53 state.currentFolderId: cmev8322n0002ycrbuersu7uq
+FileActions.ts?t=1756375225977:54 final targetFolderId: cmev8322n0002ycrbuersu7uq
+FileActions.ts?t=1756375225977:62 uniqueName generated: New File.txt
+FileActions.ts?t=1756375225977:72 folderPath: 
+FileActions.ts?t=1756375225977:81 final filePath: /New File.txt
+FileActions.ts?t=1756375225977:89 fileData to create: {name: 'New File.txt', path: '/New File.txt', folderId: 'cmev8322n0002ycrbuersu7uq', size: 0, mimeType: 'text/plain'}
+
+=== CREATE NEW FOLDER DEBUG ===
+FolderActions.ts:53 state.selectedFolderId: cmev8322o0003ycrbnzlanbn2
+FolderActions.ts:54 state.folderHierarchy exists: true
+FolderActions.ts:65 uniqueName generated: New Folder
+FolderActions.ts:70 selectedFolderNode found: Proxy(FolderNode) {id: 'cmev8322o0003ycrbnzlanbn2', name: 'Projects', path: '/Projects', parentId: null, size: '', …}
+FolderActions.ts:80 folderPath: /Projects/New Folder
+FolderActions.ts:88 folderData to create: {name: 'New Folder', path: '/Projects/New Folder', parentId: 'cmev8322o0003ycrbnzlanbn2'}
+FolderActions.ts:52 === CREATE NEW FOLDER DEBUG ===
+FolderActions.ts:53 state.selectedFolderId: cmev8322o0003ycrbnzlanbn2
+FolderActions.ts:54 state.folderHierarchy exists: true
+FolderActions.ts:65 uniqueName generated: New Folder-copy
+FolderActions.ts:70 selectedFolderNode found: Proxy(FolderNode) {id: 'cmev8322o0003ycrbnzlanbn2', name: 'Projects', path: '/Projects', parentId: null, size: '', …}
+FolderActions.ts:80 folderPath: /Projects/New Folder-copy
+FolderActions.ts:88 folderData to create: {name: 'New Folder-copy', path: '/Projects/New Folder-copy', parentId: 'cmev8322o0003ycrbnzlanbn2'}
+FolderActions.ts:52 === CREATE NEW FOLDER DEBUG ===
+FolderActions.ts:53 state.selectedFolderId: cmev8322l0001ycrbmpdsiemc
+FolderActions.ts:54 state.folderHierarchy exists: true
+FolderActions.ts:65 uniqueName generated: New Folder-copy2
+FolderActions.ts:70 selectedFolderNode found: Proxy(FolderNode) {id: 'cmev8322l0001ycrbmpdsiemc', name: 'Pictures', path: '/Pictures', parentId: null, size: '', …}
+FolderActions.ts:80 folderPath: /Pictures/New Folder-copy2
+FolderActions.ts:88 folderData to create: {name: 'New Folder-copy2', path: '/Pictures/New Folder-copy2', parentId: 'cmev8322l0001ycrbmpdsiemc'}
