@@ -22,7 +22,6 @@ export class FileEntity {
       throw new Error('File name cannot exceed 255 characters')
     }
 
-    // Windows forbidden characters
     const forbiddenChars = /[<>:"/\\|?*]/
     if (forbiddenChars.test(name)) {
       throw new Error('File name contains invalid characters')
