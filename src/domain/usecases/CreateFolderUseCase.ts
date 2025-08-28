@@ -1,7 +1,6 @@
-import type { CreateFolderRequest } from "@/application/dto/CreateFolderRequest";
-import type { FolderHierarchy } from "../entities/FolderHierarchy";
 import type { IFolderRepository } from "../repositories/IFolderRepository";
 import type { FolderEntity } from "../entities/FolderEntity";
+import type { CreateFolderRequest } from "@/application/dto/FolderDto";
 
 export class CreateFolderUseCase {
     constructor(private readonly folderRepository: IFolderRepository) {}

@@ -1,6 +1,6 @@
 import type { IFolderRepository } from '../repositories/IFolderRepository'
 import type { FolderEntity } from '../entities/FolderEntity'
-import type { UpdateFolderRequest } from '@/application/dto/UpdateFolderRequest'
+import type { UpdateFolderRequest } from '@/application/dto/FolderDto'
 
 export class UpdateFolderUseCase {
   private folderRepository: IFolderRepository
