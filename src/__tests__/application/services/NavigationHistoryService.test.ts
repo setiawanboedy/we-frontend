@@ -43,7 +43,6 @@ describe('NavigationHistoryService', () => {
     })
 
     it('should truncate history when exceeding max size', () => {
-      // Set maxHistorySize to 3 for testing
       ;(navigationService as any).maxHistorySize = 3
 
       navigationService.addToHistory('folder-1')
@@ -58,8 +57,8 @@ describe('NavigationHistoryService', () => {
     it('should handle adding folders after navigation', () => {
       navigationService.addToHistory('folder-1')
       navigationService.addToHistory('folder-2')
-      navigationService.navigateBack() // Now at folder-1
-      navigationService.addToHistory('folder-3') // Should truncate forward history
+      navigationService.navigateBack() 
+      navigationService.addToHistory('folder-3') 
 
       expect(navigationService.getHistory()).toEqual(['folder-1', 'folder-3'])
       expect(navigationService.getCurrentIndex()).toBe(1)
@@ -101,7 +100,7 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
 
       navigationService.navigateBack()
-      navigationService.navigateBack() // Should not go beyond start
+      navigationService.navigateBack()
 
       expect(navigationService.getCurrentIndex()).toBe(0)
       expect(navigationService.navigateBack()).toBeNull()
@@ -122,8 +121,8 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
       navigationService.addToHistory('folder-3')
 
-      navigationService.navigateBack() // At folder-2
-      const result = navigationService.navigateForward() // Should go to folder-3
+      navigationService.navigateBack() 
+      const result = navigationService.navigateForward() 
 
       expect(result).toBe('folder-3')
       expect(navigationService.getCurrentIndex()).toBe(2)
@@ -134,9 +133,9 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
       navigationService.addToHistory('folder-3')
 
-      navigationService.navigateBack() // At folder-2
-      navigationService.navigateBack() // At folder-1
-      const result = navigationService.navigateForward() // Should go to folder-2
+      navigationService.navigateBack() 
+      navigationService.navigateBack() 
+      const result = navigationService.navigateForward() 
 
       expect(result).toBe('folder-2')
       expect(navigationService.getCurrentIndex()).toBe(1)
@@ -146,9 +145,9 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-1')
       navigationService.addToHistory('folder-2')
 
-      navigationService.navigateBack() // At folder-1
-      navigationService.navigateForward() // At folder-2
-      const result = navigationService.navigateForward() // Should not go beyond end
+      navigationService.navigateBack() 
+      navigationService.navigateForward() 
+      const result = navigationService.navigateForward() 
 
       expect(result).toBeNull()
       expect(navigationService.getCurrentIndex()).toBe(1)
@@ -164,7 +163,7 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-1')
       navigationService.addToHistory('folder-2')
 
-      navigationService.navigateBack() // At folder-1
+      navigationService.navigateBack()
 
       expect(navigationService.canGoBack()).toBe(false)
     })
@@ -174,7 +173,7 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
       navigationService.addToHistory('folder-3')
 
-      navigationService.navigateBack() // At folder-2
+      navigationService.navigateBack() 
 
       expect(navigationService.canGoBack()).toBe(true)
     })
@@ -197,7 +196,7 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
       navigationService.addToHistory('folder-3')
 
-      navigationService.navigateBack() // At folder-2
+      navigationService.navigateBack()
 
       expect(navigationService.canGoForward()).toBe(true)
     })
@@ -212,7 +211,6 @@ describe('NavigationHistoryService', () => {
 
       expect(history).toEqual(['folder-1', 'folder-2'])
 
-      // Modifying the returned array should not affect internal state
       history.push('folder-3')
       expect(navigationService.getHistory()).toEqual(['folder-1', 'folder-2'])
     })
@@ -253,20 +251,17 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-3')
       navigationService.addToHistory('folder-4')
 
-      // Navigate back twice
-      navigationService.navigateBack() // At folder-3
-      navigationService.navigateBack() // At folder-2
+      navigationService.navigateBack() 
+      navigationService.navigateBack()
 
-      // Navigate forward once
-      navigationService.navigateForward() // At folder-3
+      navigationService.navigateForward()
 
       expect(navigationService.getCurrentIndex()).toBe(2)
       expect(navigationService.canGoBack()).toBe(true)
       expect(navigationService.canGoForward()).toBe(true)
 
-      // Navigate back to start
-      navigationService.navigateBack() // At folder-2
-      navigationService.navigateBack() // At folder-1
+      navigationService.navigateBack() 
+      navigationService.navigateBack()
 
       expect(navigationService.canGoBack()).toBe(false)
       expect(navigationService.canGoForward()).toBe(true)
@@ -277,10 +272,10 @@ describe('NavigationHistoryService', () => {
       navigationService.addToHistory('folder-2')
       navigationService.addToHistory('folder-3')
 
-      navigationService.navigateBack() // At folder-2
-      navigationService.navigateBack() // At folder-1
+      navigationService.navigateBack() 
+      navigationService.navigateBack()
 
-      navigationService.addToHistory('folder-4') // Should replace forward history
+      navigationService.addToHistory('folder-4')
 
       expect(navigationService.getHistory()).toEqual(['folder-1', 'folder-4'])
       expect(navigationService.getCurrentIndex()).toBe(1)

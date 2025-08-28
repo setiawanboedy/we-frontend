@@ -204,7 +204,6 @@ describe('GetFolderHierarchyUseCase', () => {
 
       const result = await useCase.execute()
 
-      // Verify structure is preserved
       expect(result.folders[0].id).toBe('root')
       expect(result.folders[0].children[0].id).toBe('child1')
       expect(result.folders[0].children[0].children[0].id).toBe('grandchild')

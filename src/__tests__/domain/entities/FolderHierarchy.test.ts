@@ -100,7 +100,6 @@ describe('FolderHierarchy', () => {
 
   describe('complex hierarchy scenarios', () => {
     it('should handle deep nested hierarchy', () => {
-      // Create a deep hierarchy: root -> child -> grandchild -> great-grandchild
       const greatGrandchild = new FolderNode(
         'ggc',
         'Great Grandchild',
@@ -120,11 +119,9 @@ describe('FolderHierarchy', () => {
 
       const hierarchy = new FolderHierarchy([root])
 
-      // Test finding deeply nested node
       const found = hierarchy.findById('ggc')
       expect(found).toBe(greatGrandchild)
 
-      // Test all ids include deeply nested ones
       const ids = hierarchy.getAllIds()
       expect(ids).toEqual(['root', 'child', 'gc', 'ggc'])
     })
@@ -162,7 +159,6 @@ describe('FolderHierarchy', () => {
     })
 
     it('should handle very large hierarchy efficiently', () => {
-      // Create a large hierarchy to test performance
       const createLargeHierarchy = (depth: number, breadth: number): FolderNode => {
         if (depth === 0) {
           return new FolderNode(`leaf-${Math.random()}`, 'Leaf', '/leaf', null, '1', [])
@@ -185,7 +181,6 @@ describe('FolderHierarchy', () => {
 
       const largeHierarchy = new FolderHierarchy([createLargeHierarchy(3, 3)])
 
-      // Just test that it doesn't crash and returns some IDs
       const ids = largeHierarchy.getAllIds()
       expect(ids.length).toBeGreaterThan(0)
       expect(ids[0]).toMatch(/^node-3-3/)
@@ -233,13 +228,11 @@ describe('FolderHierarchy', () => {
 
       const hierarchy = new FolderHierarchy([root])
 
-      // Test finding all types of nodes
       expect(hierarchy.findById('leaf1')).toBe(leaf1)
       expect(hierarchy.findById('parent')).toBe(parentWithChildren)
       expect(hierarchy.findById('empty-parent')).toBe(parentWithoutChildren)
       expect(hierarchy.findById('leaf2')).toBe(leaf2)
 
-      // Test getAllIds includes all nodes
       const ids = hierarchy.getAllIds()
       expect(ids).toEqual(['root', 'parent', 'leaf1', 'empty-parent', 'leaf2'])
     })

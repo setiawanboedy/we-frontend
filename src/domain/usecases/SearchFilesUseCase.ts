@@ -22,7 +22,6 @@ export class SearchFilesUseCase {
       throw new Error('Offset cannot be negative')
     }
 
-    // Set defaults
     const searchParams = {
       name: request.name?.trim() || '',
       folderId: request.folderId,

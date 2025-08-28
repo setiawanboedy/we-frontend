@@ -18,7 +18,6 @@ export class FileActions {
 
       const file = await this.applicationService.createFile(data)
 
-      // Reload files for the current folder
       if (this.state.currentFolderId.value) {
         await this.loadingActions.loadFilesByFolder(this.state.currentFolderId.value)
       }
@@ -66,10 +65,10 @@ export class FileActions {
 
       const fileData: CreateFileRequest = {
         name: uniqueName,
-        path: `/${uniqueName}`, // Basic path construction
+        path: `/${uniqueName}`, 
         folderId: targetFolderId,
-        size: 0, // New file starts with 0 size
-        mimeType: 'text/plain', // Default text document
+        size: 0, 
+        mimeType: 'text/plain', 
       }
 
       return await this.createFile(fileData)
@@ -85,7 +84,6 @@ export class FileActions {
 
       const file = await this.applicationService.updateFile(fileId, data)
 
-      // Update the file in the current list
       const index = this.state.files.value.findIndex((f) => f.id === fileId)
       if (index !== -1) {
         this.state.files.value[index] = file
@@ -108,13 +106,11 @@ export class FileActions {
 
       await this.applicationService.deleteFile(fileId)
 
-      // Remove from current files list
       const index = this.state.files.value.findIndex((f) => f.id === fileId)
       if (index !== -1) {
         this.state.files.value.splice(index, 1)
       }
 
-      // Clear selection if deleted file was selected
       if (this.state.selectedFileId.value === fileId) {
         this.state.selectedFileId.value = null
       }

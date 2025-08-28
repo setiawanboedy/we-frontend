@@ -59,7 +59,6 @@ export class FolderActions {
     try {
       const uniqueName = this.generateUniqueFolderName()
 
-      // Use domain hierarchy instead of utility function
       const selectedFolderNode = this.state.folderHierarchy.value.findById(
         this.state.selectedFolderId.value,
       )

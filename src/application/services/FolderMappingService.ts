@@ -63,7 +63,7 @@ export class FolderMappingService {
       path: node.path,
       parentId: node.parentId,
       size: node.size?.toString() ?? '',
-      createdAt: new Date().toISOString(), // Default values since FolderNode doesn't have timestamps
+      createdAt: new Date().toISOString(), 
       updatedAt: new Date().toISOString(),
       children: node.children.map((child) => this.nodeToDto(child)),
     }

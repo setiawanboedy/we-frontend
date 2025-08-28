@@ -21,7 +21,6 @@ export class FolderEntity {
       throw new Error('Folder name cannot exceed 255 characters')
     }
 
-    // Windows forbidden characters
     const forbiddenChars = /[<>:"/\\|?*]/
     if (forbiddenChars.test(name)) {
       throw new Error('Folder name contains invalid characters')

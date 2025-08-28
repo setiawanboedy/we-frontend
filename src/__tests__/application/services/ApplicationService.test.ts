@@ -1,5 +1,4 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
 import { FolderEntity } from '@/domain/entities/FolderEntity'
 import { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
 import type {
@@ -89,7 +88,6 @@ describe('ApplicationService', () => {
 
   describe('constructor', () => {
     it('should initialize the service with injected use cases', () => {
-      // Test that the service is properly constructed with use cases
       expect(applicationService).toBeDefined()
       expect(applicationService).toBeInstanceOf(ApplicationFolderService)
     })

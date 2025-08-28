@@ -9,7 +9,6 @@ const folderStore = useFolderStore()
 const fileStore = useFileStore()
 
 const handleFolderSelect = (folder: FolderItem) => {
-  // Clear search when navigating from sidebar
   if (folderStore.isSearchMode || fileStore.isSearchMode) {
     folderStore.clearSearch()
     fileStore.clearSearch()

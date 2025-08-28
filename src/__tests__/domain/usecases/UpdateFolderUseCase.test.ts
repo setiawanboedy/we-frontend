@@ -61,14 +61,13 @@ describe('UpdateFolderUseCase', () => {
       const folderId = 'folder-to-update'
       const updateData: UpdateFolderRequest = {
         name: 'Updated Name',
-        // Only updating name, path and parentId are undefined
       }
 
       const expectedUpdatedFolder = new FolderEntity(
         folderId,
         'Updated Name',
-        '/original/path', // Original path preserved
-        'original-parent-id', // Original parent preserved
+        '/original/path',
+        'original-parent-id',
         1024,
       )
 

@@ -11,8 +11,8 @@ export class FileSearchService implements IFileSearchService {
     try {
       const searchParams: SearchFileParams = {
         name: query,
-        limit: 100, // Default limit
-        offset: 0, // Default offset
+        limit: 100, 
+        offset: 0,
       }
 
       const response = await fileApiService.searchFiles(searchParams)
@@ -21,7 +21,6 @@ export class FileSearchService implements IFileSearchService {
         throw new Error(response.error || 'Failed to search files')
       }
 
-      // If folderId is provided, filter results to that folder
       let results = response.data
       if (folderId) {
         results = results.filter((file) => file.folderId === folderId)

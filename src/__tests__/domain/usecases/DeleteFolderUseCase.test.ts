@@ -159,7 +159,6 @@ describe('DeleteFolderUseCase', () => {
       mockRepository.exists.mockResolvedValue(true)
       mockRepository.delete.mockResolvedValue(undefined)
 
-      // Simulate concurrent calls
       const promises = [
         useCase.execute(folderId),
         useCase.execute(folderId),
@@ -175,9 +174,7 @@ describe('DeleteFolderUseCase', () => {
     it('should handle folder that gets deleted between existence check and delete', async () => {
       const folderId = 'race-condition-folder'
 
-      // First call to exists returns true
       mockRepository.exists.mockResolvedValueOnce(true)
-      // But delete fails because folder no longer exists
       mockRepository.delete.mockRejectedValue(new Error('Folder not found'))
 
       await expect(useCase.execute(folderId)).rejects.toThrow(
