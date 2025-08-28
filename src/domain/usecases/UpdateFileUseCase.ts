@@ -40,32 +40,14 @@ export class UpdateFileUseCase {
       throw new Error('File path cannot be empty')
     }
 
-    if (request.size !== undefined && request.size < 0) {
-      throw new Error('File size cannot be negative')
-    }
-
-    if (request.mimeType !== undefined && !request.mimeType) {
-      throw new Error('MIME type cannot be empty')
-    }
-
     try {
       const existingFile = await this.fileRepository.getById(id)
       if (!existingFile) {
         throw new Error('File not found')
       }
 
-      const updatedFile = new FileEntity(
-        existingFile.id,
-        request.name?.trim() ?? existingFile.name,
-        request.path ?? existingFile.path,
-        existingFile.folderId,
-        request.size ?? existingFile.size,
-        request.mimeType ?? existingFile.mimeType,
-        existingFile.createdAt,
-        new Date(), 
-      )
 
-      return await this.fileRepository.update(id, updatedFile)
+      return await this.fileRepository.update(id, request)
     } catch (error) {
       throw new Error(
         `Failed to update file: ${error instanceof Error ? error.message : 'Unknown error'}`,

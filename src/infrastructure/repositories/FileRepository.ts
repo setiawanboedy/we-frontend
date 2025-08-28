@@ -78,9 +78,7 @@ export class FileRepository implements IFileRepository {
   }
 
   async update(id: string, data: UpdateFileRequest): Promise<FileEntity> {
-    const response = await fileApiService.updateFile(id, {
-      name: data.name,
-    })
+    const response = await fileApiService.updateFile(id, data)
 
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to update file')

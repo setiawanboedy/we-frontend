@@ -14,6 +14,9 @@ const handleFolderSelect = (folder: FolderItem) => {
     fileStore.clearSearch()
   }
 
+  // Clear file selection when selecting folder in sidebar
+  fileStore.clearFileSelection()
+
   folderStore.clearMainSelection()
   folderStore.selectFolder(folder.id)
 }

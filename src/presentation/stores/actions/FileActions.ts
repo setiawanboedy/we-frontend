@@ -169,7 +169,21 @@ export class FileActions {
 
   async renameFile(fileId: string, newName: string): Promise<any> {
     try {
-      return await this.updateFile(fileId, { name: newName })
+      const currentFile = this.state.files.value.find((file) => file.id === fileId)
+      if (!currentFile) {
+        return ResultFormatter.error(new Error('File not found'), 'rename file')
+      }
+
+      const currentPath = currentFile.path
+      const lastSlashIndex = currentPath.lastIndexOf('/')
+      const directoryPath = lastSlashIndex >= 0 ? currentPath.substring(0, lastSlashIndex) : ''
+
+      const newPath = directoryPath ? `${directoryPath}/${newName}` : newName
+
+      return await this.updateFile(fileId, {
+        name: newName,
+        path: newPath,
+      })
     } catch (error) {
       return ResultFormatter.error(error, 'rename file')
     }

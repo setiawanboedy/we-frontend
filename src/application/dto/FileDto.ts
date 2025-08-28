@@ -18,7 +18,8 @@ export interface CreateFileRequest {
 }
 
 export interface UpdateFileRequest {
-  name?: string
+  name?: string;
+  path?: string;
 }
 
 

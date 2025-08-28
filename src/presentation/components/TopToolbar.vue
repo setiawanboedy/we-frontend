@@ -10,7 +10,11 @@ const fileStore = useFileStore()
 const hasMainFolderSelected = computed(() => !!folderStore.selectedMainFolderId)
 const hasFileSelected = computed(() => fileStore.selectedFileIds.length > 0)
 const hasSingleFileSelected = computed(() => fileStore.selectedFileIds.length === 1)
-const hasMultipleFilesSelected = computed(() => fileStore.selectedFileIds.length > 1)
+
+const shouldShowActionButtons = computed(() => hasFileSelected.value || hasMainFolderSelected.value)
+const shouldShowRenameButton = computed(
+  () => hasSingleFileSelected.value || hasMainFolderSelected.value,
+)
 
 interface Props {
   currentPath: string
@@ -83,16 +87,12 @@ const createItem = (type: 'file' | 'folder') => {
 const handleRenameFile = () => {
   if (hasSingleFileSelected.value && fileStore.selectedFileId) {
     emit('rename-file', fileStore.selectedFileId)
-  } else if (hasMainFolderSelected.value && folderStore.selectedMainFolderId) {
-    emit('rename-folder', folderStore.selectedMainFolderId)
   }
 }
 
 const handleDeleteFiles = () => {
   if (hasFileSelected.value) {
     emit('delete-files', fileStore.selectedFileIds)
-  } else if (hasMainFolderSelected.value && folderStore.selectedMainFolderId) {
-    emit('delete-folder', folderStore.selectedMainFolderId)
   }
 }
 
@@ -150,9 +150,9 @@ const toggleMobileSearch = () => {
       <!-- Right: Actions -->
       <div class="flex space-x-1">
         <!-- Action buttons for selection -->
-        <div v-if="hasMainFolderSelected || hasFileSelected" class="flex space-x-1">
+        <div v-if="shouldShowActionButtons" class="flex space-x-1">
           <button
-            v-if="hasSingleFileSelected || hasMainFolderSelected"
+            v-if="shouldShowRenameButton"
             class="win-button p-1"
             title="Rename"
             @click="handleRenameFile"
@@ -275,9 +275,10 @@ const toggleMobileSearch = () => {
           </button>
         </div>
       </div>
-      <div v-if="hasMainFolderSelected || hasFileSelected" class="flex space-x-2">
+
+      <div v-if="shouldShowActionButtons" class="flex space-x-2">
         <button
-          v-if="hasSingleFileSelected || hasMainFolderSelected"
+          v-if="shouldShowRenameButton"
           class="win-button"
           title="Rename"
           @click="handleRenameFile"
@@ -289,11 +290,9 @@ const toggleMobileSearch = () => {
           <i class="fas fa-trash text-red-600 mr-1"></i>
           <span class="text-sm">
             Delete
-            <span v-if="hasMultipleFilesSelected">({{ fileStore.selectedFileIds.length }})</span>
           </span>
         </button>
       </div>
-
       <div class="flex-1 flex items-center win-input bg-white border-gray-300 rounded px-3 py-2">
         <i class="fas fa-desktop text-gray-500 mr-2"></i>
         <BreadcrumbNav :path="currentPath" @navigate-to="handleBreadcrumbClick" />

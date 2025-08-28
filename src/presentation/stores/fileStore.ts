@@ -46,7 +46,6 @@ export const useFileStore = defineStore('files', () => {
 
     createFile: crudActions.createFile.bind(crudActions),
     createNewFile: crudActions.createNewFile.bind(crudActions),
-    updateFile: crudActions.updateFile.bind(crudActions),
     deleteFile: crudActions.deleteFile.bind(crudActions),
     renameFile: crudActions.renameFile.bind(crudActions),
   }

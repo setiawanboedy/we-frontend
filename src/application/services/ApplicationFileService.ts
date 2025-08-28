@@ -72,11 +72,8 @@ export class ApplicationFileService {
 
   async updateFile(id: string, request: UpdateFileRequest): Promise<FileDto> {
     try {
-      const updateRequest = {
-        name: request.name,
-      }
 
-      const fileEntity = await this.updateFileUseCase.execute(id, updateRequest)
+      const fileEntity = await this.updateFileUseCase.execute(id, request)
       return FileMappingService.toDto(fileEntity)
     } catch (error) {
       throw new Error(
