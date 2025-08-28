@@ -34,7 +34,9 @@ export class FileActions {
 
   generateUniqueFileName(baseName: string = 'New File.txt'): string {
     const existingNames = this.state.files.value.map((file) => file.name.toLowerCase())
-    if (!existingNames.includes(baseName)) {
+    const baseNameLower = baseName.toLowerCase()
+
+    if (!existingNames.includes(baseNameLower)) {
       return baseName
     }
 
@@ -44,10 +46,12 @@ export class FileActions {
 
     let counter = 1
     let newName = `${baseNameWithoutExt} (${counter}).${extension}`
+    let newNameLower = newName.toLowerCase()
 
-    while (existingNames.includes(newName)) {
+    while (existingNames.includes(newNameLower)) {
       counter++
       newName = `${baseNameWithoutExt} (${counter}).${extension}`
+      newNameLower = newName.toLowerCase()
     }
 
     return newName
@@ -65,10 +69,10 @@ export class FileActions {
 
       const fileData: CreateFileRequest = {
         name: uniqueName,
-        path: `/${uniqueName}`, 
+        path: `/${uniqueName}`,
         folderId: targetFolderId,
-        size: 0, 
-        mimeType: 'text/plain', 
+        size: 0,
+        mimeType: 'text/plain',
       }
 
       return await this.createFile(fileData)
@@ -131,7 +135,6 @@ export class FileActions {
 
   async renameFile(fileId: string, newName: string): Promise<any> {
     try {
-
       return await this.updateFile(fileId, { name: newName })
     } catch (error) {
       return ResultFormatter.error(error, 'rename file')

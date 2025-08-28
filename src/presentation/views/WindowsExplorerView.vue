@@ -368,7 +368,7 @@ const formatDate = (dateString: string): string => {
             :class="[
               'flex items-center space-x-4 py-2 px-3 rounded cursor-default transition-colors',
               folderStore.selectedMainFolderId === folder.id
-                ? 'bg-blue-100 border-l-4 border-blue-500'
+                ? 'bg-blue-100'
                 : 'hover:bg-blue-50',
             ]"
             @click="selectHighlight(folder)"
@@ -393,7 +393,7 @@ const formatDate = (dateString: string): string => {
             :class="[
               'flex items-center space-x-4 py-2 px-3 rounded cursor-default transition-colors',
               fileStore.selectedFileIds.includes(file.id)
-                ? 'bg-blue-100 border-l-4 border-blue-500'
+                ? 'bg-blue-100 '
                 : 'hover:bg-blue-50',
             ]"
             @click="selectHighlightFile(file.id)"
