@@ -1,6 +1,5 @@
-import type { CreateFolderRequest } from '@/application/dto/CreateFolderRequest'
+import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
 import type { FolderEntity } from '../entities/FolderEntity'
-import type { UpdateFolderRequest } from '@/application/dto/UpdateFolderRequest'
 import type { FolderHierarchy } from '../entities/FolderHierarchy'
 
 export interface IFolderRepository {
