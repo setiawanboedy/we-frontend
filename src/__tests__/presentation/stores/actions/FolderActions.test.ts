@@ -1,9 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { FolderActions } from '../../../../presentation/stores/actions/FolderActions'
 import type { FolderState } from '../../../../presentation/stores/state/FolderState'
-import type { ApplicationService } from '../../../../application/services/ApplicationService'
-import type { IFolderDataService } from '../../../../domain/interfaces/IFolderServices'
-import type { CreateFolderRequest } from '../../../../application/dto/CreateFolderRequest'
+import type { CreateFolderRequest } from '@/application/dto/FolderDto'
 
 // Mock dependencies
 const mockState: FolderState = {

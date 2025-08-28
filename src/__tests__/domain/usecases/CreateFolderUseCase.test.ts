@@ -2,8 +2,8 @@ import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Mock } from 'vitest'
 import { CreateFolderUseCase } from '../../../domain/usecases/CreateFolderUseCase'
 import type { IFolderRepository } from '../../../domain/repositories/IFolderRepository'
-import type { CreateFolderRequest } from '../../../application/dto/CreateFolderRequest'
 import { FolderEntity } from '../../../domain/entities/FolderEntity'
+import type { CreateFolderRequest } from '@/application/dto/FolderDto'
 
 describe('CreateFolderUseCase', () => {
   let mockRepository: {

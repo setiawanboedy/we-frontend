@@ -70,7 +70,6 @@ export class FileActions {
         folderId: targetFolderId,
         size: 0, // New file starts with 0 size
         mimeType: 'text/plain', // Default text document
-        content: '',
       }
 
       return await this.createFile(fileData)

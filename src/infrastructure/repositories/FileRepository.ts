@@ -59,7 +59,6 @@ export class FileRepository implements IFileRepository {
       folderId: data.folderId,
       size: data.size,
       mimeType: data.mimeType,
-      content: data.content,
     })
 
     if (!response.success || !response.data) {
@@ -81,7 +80,6 @@ export class FileRepository implements IFileRepository {
   async update(id: string, data: UpdateFileRequest): Promise<FileEntity> {
     const response = await fileApiService.updateFile(id, {
       name: data.name,
-      content: data.content,
     })
 
     if (!response.success || !response.data) {

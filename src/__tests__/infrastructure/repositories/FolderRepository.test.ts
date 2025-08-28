@@ -1,12 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest'
 import type { Mock } from 'vitest'
 import { FolderRepository } from '../../../infrastructure/repositories/FolderRepository'
-import type { CreateFolderRequest } from '../../../application/dto/CreateFolderRequest'
-import type { UpdateFolderRequest } from '../../../application/dto/UpdateFolderRequest'
 import { FolderEntity } from '../../../domain/entities/FolderEntity'
 import { FolderHierarchy } from '../../../domain/entities/FolderHierarchy'
 import { folderApiService } from '../../../infrastructure/api/folderApi'
 import { FolderMappingService } from '../../../application/services/FolderMappingService'
+import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
 
 // Mock the dependencies
 vi.mock('../../../infrastructure/api/folderApi', () => ({

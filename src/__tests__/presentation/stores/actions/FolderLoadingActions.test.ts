@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { FolderLoadingActions } from '../../../../presentation/stores/actions/FolderLoadingActions'
 import type { FolderState } from '../../../../presentation/stores/state/FolderState'
-import type { ApplicationService } from '../../../../application/services/ApplicationService'
+import type { ApplicationFolderService } from '../../../../application/services/ApplicationFolderService'
 import type { FolderItem } from '../../../../shared/types/explorer'
 
 // Mock the folderHelpers module
@@ -30,7 +30,7 @@ const mockState: FolderState = {
   selectedFolderId: { value: null },
 } as any
 
-const mockAppService: ApplicationService = {
+const mockAppService: ApplicationFolderService = {
   getFolderHierarchy: vi.fn(),
   getFolderChildren: vi.fn(),
 } as any

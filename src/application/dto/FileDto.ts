@@ -15,17 +15,12 @@ export interface CreateFileRequest {
   folderId: string
   size: number | null
   mimeType: string | null
-  content?: string
 }
 
 export interface UpdateFileRequest {
   name?: string
-  content?: string
 }
 
-export interface FileWithContentDto extends FileDto {
-  content: string
-}
 
 export interface SearchFileParams {
   name?: string;

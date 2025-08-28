@@ -2,7 +2,6 @@ import type {
   FileDto,
   CreateFileRequest,
   UpdateFileRequest,
-  FileWithContentDto,
   SearchFileParams,
 } from '@/application/dto/FileDto'
 import { apiClient, type ApiResponse } from './apiClient'
@@ -12,8 +11,8 @@ export class FileApi {
     return apiClient.get<FileDto[]>(`/files/folder/${folderId}`)
   }
 
-  async getFileById(id: string): Promise<ApiResponse<FileWithContentDto>> {
-    return apiClient.get<FileWithContentDto>(`/files/${id}`)
+  async getFileById(id: string): Promise<ApiResponse<FileDto>> {
+    return apiClient.get<FileDto>(`/files/${id}`)
   }
 
   async createFile(data: CreateFileRequest): Promise<ApiResponse<FileDto>> {

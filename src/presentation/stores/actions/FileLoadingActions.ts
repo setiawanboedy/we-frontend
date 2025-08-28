@@ -1,6 +1,6 @@
 import type { ApplicationFileService } from '@/application/services/ApplicationFileService'
 import type { FileState } from '../state/FileState'
-import type { FileDto, FileWithContentDto } from '@/application/dto/FileDto'
+import type { FileDto } from '@/application/dto/FileDto'
 import type { IFileDataService } from '@/domain/interfaces/IFileServices'
 
 export class FileLoadingActions implements IFileDataService {
@@ -26,7 +26,7 @@ export class FileLoadingActions implements IFileDataService {
     }
   }
 
-  async loadFile(fileId: string): Promise<FileWithContentDto> {
+  async loadFile(fileId: string): Promise<FileDto> {
     this.state.isLoadingFile.value = true
     this.state.fileError.value = null
 

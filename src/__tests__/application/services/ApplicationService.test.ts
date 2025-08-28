@@ -1,10 +1,14 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
-import { ApplicationService } from '@/application/services/ApplicationService'
 import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
 import { FolderEntity } from '@/domain/entities/FolderEntity'
 import { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
-import type { FolderDto, FolderWithChildrenDto } from '@/application/dto/FolderDto'
-import type { CreateFolderRequest } from '@/application/dto/CreateFolderRequest'
+import type {
+  CreateFolderRequest,
+  FolderDto,
+  FolderWithChildrenDto,
+} from '@/application/dto/FolderDto'
+import { FolderMappingService } from '@/application/services/FolderMappingService'
+import { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
 
 // Mock the use cases
 vi.mock('@/domain/usecases/GetFolderHierarchyUseCase', () => ({
@@ -45,16 +49,9 @@ vi.mock('@/application/services/FolderMappingService', () => ({
   },
 }))
 
-import { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHierarchyUseCase'
-import { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildrenUseCase'
-import { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
-import { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
-import { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
-import { FolderMappingService } from '@/application/services/FolderMappingService'
 
 describe('ApplicationService', () => {
-  let mockRepository: IFolderRepository
-  let applicationService: ApplicationService
+  let applicationService: ApplicationFolderService
   let mockGetFolderHierarchyUseCase: any
   let mockGetFolderChildrenUseCase: any
   let mockCreateFolderUseCase: any
@@ -63,8 +60,6 @@ describe('ApplicationService', () => {
 
   beforeEach(() => {
     vi.clearAllMocks()
-
-    mockRepository = {} as IFolderRepository
 
     // Create mock instances
     mockGetFolderHierarchyUseCase = {
@@ -83,23 +78,20 @@ describe('ApplicationService', () => {
       execute: vi.fn(),
     }
 
-    // Mock the constructors
-    ;(GetFolderHierarchyUseCase as any).mockImplementation(() => mockGetFolderHierarchyUseCase)
-    ;(GetFolderChildrenUseCase as any).mockImplementation(() => mockGetFolderChildrenUseCase)
-    ;(CreateFolderUseCase as any).mockImplementation(() => mockCreateFolderUseCase)
-    ;(DeleteFolderUseCase as any).mockImplementation(() => mockDeleteFolderUseCase)
-    ;(UpdateFolderUseCase as any).mockImplementation(() => mockUpdateFolderUseCase)
-
-    applicationService = new ApplicationService(mockRepository)
+    applicationService = new ApplicationFolderService(
+      mockGetFolderHierarchyUseCase,
+      mockGetFolderChildrenUseCase,
+      mockCreateFolderUseCase,
+      mockDeleteFolderUseCase,
+      mockUpdateFolderUseCase,
+    )
   })
 
   describe('constructor', () => {
-    it('should initialize all use cases with the repository', () => {
-      expect(GetFolderHierarchyUseCase).toHaveBeenCalledWith(mockRepository)
-      expect(GetFolderChildrenUseCase).toHaveBeenCalledWith(mockRepository)
-      expect(CreateFolderUseCase).toHaveBeenCalledWith(mockRepository)
-      expect(DeleteFolderUseCase).toHaveBeenCalledWith(mockRepository)
-      expect(UpdateFolderUseCase).toHaveBeenCalledWith(mockRepository)
+    it('should initialize the service with injected use cases', () => {
+      // Test that the service is properly constructed with use cases
+      expect(applicationService).toBeDefined()
+      expect(applicationService).toBeInstanceOf(ApplicationFolderService)
     })
   })
 
