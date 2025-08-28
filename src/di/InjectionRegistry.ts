@@ -10,6 +10,21 @@ import { NavigationHistoryService } from '@/application/services/NavigationHisto
 import { SearchService } from '@/application/services/SearchService'
 import { AdvancedSearchService } from '@/application/services/AdvancedSearchService'
 
+// File Use Cases
+import { GetFilesByFolderUseCase } from '@/domain/usecases/GetFilesByFolderUseCase'
+import { CreateFileUseCase } from '@/domain/usecases/CreateFileUseCase'
+import { UpdateFileUseCase } from '@/domain/usecases/UpdateFileUseCase'
+import { DeleteFileUseCase } from '@/domain/usecases/DeleteFileUseCase'
+import { SearchFilesUseCase } from '@/domain/usecases/SearchFilesUseCase'
+import { GetFileByIdUseCase } from '@/domain/usecases/GetFileByIdUseCase'
+
+// Folder Use Cases
+import { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHierarchyUseCase'
+import { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildrenUseCase'
+import { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
+import { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
+import { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
+
 interface ServiceConfig {
   useAdvancedSearch: boolean
   enableLogging: boolean
@@ -55,9 +70,50 @@ export class InjectionRegistry {
         return repository
       })
 
-      this.container.register<ApplicationFolderService>('folderService', () => {
+      // Register Folder Use Cases
+      this.container.register<GetFolderHierarchyUseCase>('getFolderHierarchyUseCase', () => {
         const repository = this.container.get<FolderRepository>('folderRepository')
-        const service = new ApplicationFolderService(repository)
+        return new GetFolderHierarchyUseCase(repository)
+      })
+
+      this.container.register<GetFolderChildrenUseCase>('getFolderChildrenUseCase', () => {
+        const repository = this.container.get<FolderRepository>('folderRepository')
+        return new GetFolderChildrenUseCase(repository)
+      })
+
+      this.container.register<CreateFolderUseCase>('createFolderUseCase', () => {
+        const repository = this.container.get<FolderRepository>('folderRepository')
+        return new CreateFolderUseCase(repository)
+      })
+
+      this.container.register<UpdateFolderUseCase>('updateFolderUseCase', () => {
+        const repository = this.container.get<FolderRepository>('folderRepository')
+        return new UpdateFolderUseCase(repository)
+      })
+
+      this.container.register<DeleteFolderUseCase>('deleteFolderUseCase', () => {
+        const repository = this.container.get<FolderRepository>('folderRepository')
+        return new DeleteFolderUseCase(repository)
+      })
+
+      this.container.register<ApplicationFolderService>('folderService', () => {
+        const getFolderHierarchyUseCase = this.container.get<GetFolderHierarchyUseCase>(
+          'getFolderHierarchyUseCase',
+        )
+        const getFolderChildrenUseCase = this.container.get<GetFolderChildrenUseCase>(
+          'getFolderChildrenUseCase',
+        )
+        const createFolderUseCase = this.container.get<CreateFolderUseCase>('createFolderUseCase')
+        const updateFolderUseCase = this.container.get<UpdateFolderUseCase>('updateFolderUseCase')
+        const deleteFolderUseCase = this.container.get<DeleteFolderUseCase>('deleteFolderUseCase')
+
+        const service = new ApplicationFolderService(
+          getFolderHierarchyUseCase,
+          getFolderChildrenUseCase,
+          createFolderUseCase,
+          deleteFolderUseCase,
+          updateFolderUseCase,
+        )
         return service
       })
 
@@ -66,9 +122,54 @@ export class InjectionRegistry {
         return repository
       })
 
-      this.container.register<ApplicationFileService>('fileService', () => {
+      // Register File Use Cases
+      this.container.register<GetFilesByFolderUseCase>('getFilesByFolderUseCase', () => {
         const repository = this.container.get<FileRepository>('fileRepository')
-        const service = new ApplicationFileService(repository)
+        return new GetFilesByFolderUseCase(repository)
+      })
+
+      this.container.register<CreateFileUseCase>('createFileUseCase', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        return new CreateFileUseCase(repository)
+      })
+
+      this.container.register<UpdateFileUseCase>('updateFileUseCase', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        return new UpdateFileUseCase(repository)
+      })
+
+      this.container.register<DeleteFileUseCase>('deleteFileUseCase', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        return new DeleteFileUseCase(repository)
+      })
+
+      this.container.register<SearchFilesUseCase>('searchFilesUseCase', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        return new SearchFilesUseCase(repository)
+      })
+
+      this.container.register<GetFileByIdUseCase>('getFileByIdUseCase', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        return new GetFileByIdUseCase(repository)
+      })
+
+      this.container.register<ApplicationFileService>('fileService', () => {
+        const getFilesByFolderUseCase =
+          this.container.get<GetFilesByFolderUseCase>('getFilesByFolderUseCase')
+        const createFileUseCase = this.container.get<CreateFileUseCase>('createFileUseCase')
+        const updateFileUseCase = this.container.get<UpdateFileUseCase>('updateFileUseCase')
+        const deleteFileUseCase = this.container.get<DeleteFileUseCase>('deleteFileUseCase')
+        const searchFilesUseCase = this.container.get<SearchFilesUseCase>('searchFilesUseCase')
+        const getFileByIdUseCase = this.container.get<GetFileByIdUseCase>('getFileByIdUseCase')
+
+        const service = new ApplicationFileService(
+          getFilesByFolderUseCase,
+          createFileUseCase,
+          updateFileUseCase,
+          deleteFileUseCase,
+          searchFilesUseCase,
+          getFileByIdUseCase,
+        )
         return service
       })
 
@@ -99,7 +200,6 @@ export class InjectionRegistry {
 
   public updateConfig(config: Partial<ServiceConfig>): void {
     this.config = { ...this.config, ...config }
-    // Clear existing services and re-register
     this.container.clear()
     this.registerServices()
   }
