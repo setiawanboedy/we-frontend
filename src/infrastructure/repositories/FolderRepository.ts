@@ -1,10 +1,9 @@
-import type { CreateFolderRequest } from '@/application/dto/CreateFolderRequest'
-import type { UpdateFolderRequest } from '@/application/dto/UpdateFolderRequest'
 import type { FolderEntity } from '@/domain/entities/FolderEntity'
 import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
 import { folderApiService } from '../api/folderApi'
 import { FolderMappingService } from '@/application/services/FolderMappingService'
 import { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
+import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
 
 export class FolderRepository implements IFolderRepository {
   async getAllWithHierarchy(): Promise<FolderHierarchy> {
