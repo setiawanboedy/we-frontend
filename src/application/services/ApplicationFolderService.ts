@@ -1,26 +1,19 @@
-import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
-import { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
-import { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
-import { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildrenUseCase'
-import { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHierarchyUseCase'
-import { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
+import type { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
+import type { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
+import type { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildrenUseCase'
+import type { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHierarchyUseCase'
+import type { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
 import { FolderMappingService } from './FolderMappingService'
 import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto } from '../dto/FolderDto'
 
 export class ApplicationFolderService {
-  private getFolderHierarchyUseCase: GetFolderHierarchyUseCase
-  private getFolderChildrenUseCase: GetFolderChildrenUseCase
-  private createFolderUseCase: CreateFolderUseCase
-  private deleteFolderUseCase: DeleteFolderUseCase
-  private updateFolderUseCase: UpdateFolderUseCase
-
-  constructor(folderRepository: IFolderRepository) {
-    this.getFolderHierarchyUseCase = new GetFolderHierarchyUseCase(folderRepository)
-    this.getFolderChildrenUseCase = new GetFolderChildrenUseCase(folderRepository)
-    this.createFolderUseCase = new CreateFolderUseCase(folderRepository)
-    this.deleteFolderUseCase = new DeleteFolderUseCase(folderRepository)
-    this.updateFolderUseCase = new UpdateFolderUseCase(folderRepository)
-  }
+  constructor(
+    private readonly getFolderHierarchyUseCase: GetFolderHierarchyUseCase,
+    private readonly getFolderChildrenUseCase: GetFolderChildrenUseCase,
+    private readonly createFolderUseCase: CreateFolderUseCase,
+    private readonly deleteFolderUseCase: DeleteFolderUseCase,
+    private readonly updateFolderUseCase: UpdateFolderUseCase,
+  ) {}
 
   async getFolderHierarchy(): Promise<FolderWithChildrenDto[]> {
     try {

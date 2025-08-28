@@ -1,28 +1,31 @@
-import type { IFileRepository } from '@/domain/repositories/IFileRepository'
 import type {
   FileDto,
   CreateFileRequest,
   UpdateFileRequest,
-  FileWithContentDto,
   SearchFileParams,
 } from '../dto/FileDto'
+import type { GetFilesByFolderUseCase } from '../../domain/usecases/GetFilesByFolderUseCase'
+import type { CreateFileUseCase } from '../../domain/usecases/CreateFileUseCase'
+import type { UpdateFileUseCase } from '../../domain/usecases/UpdateFileUseCase'
+import type { DeleteFileUseCase } from '../../domain/usecases/DeleteFileUseCase'
+import type { SearchFilesUseCase } from '../../domain/usecases/SearchFilesUseCase'
+import type { GetFileByIdUseCase } from '../../domain/usecases/GetFileByIdUseCase'
+import { FileMappingService } from './FileMappingService'
 
 export class ApplicationFileService {
-  constructor(private fileRepository: IFileRepository) {}
+  constructor(
+    private readonly getFilesByFolderUseCase: GetFilesByFolderUseCase,
+    private readonly createFileUseCase: CreateFileUseCase,
+    private readonly updateFileUseCase: UpdateFileUseCase,
+    private readonly deleteFileUseCase: DeleteFileUseCase,
+    private readonly searchFilesUseCase: SearchFilesUseCase,
+    private readonly getFileByIdUseCase: GetFileByIdUseCase,
+  ) {}
 
   async getFilesByFolder(folderId: string): Promise<FileDto[]> {
     try {
-      const files = await this.fileRepository.getByFolderId(folderId)
-      return files.map((file) => ({
-        id: file.id,
-        name: file.name,
-        path: file.path,
-        folderId: file.folderId,
-        size: file.size,
-        mimeType: file.mimeType,
-        createdAt: file.createdAt.toISOString(),
-        updatedAt: file.updatedAt.toISOString(),
-      }))
+      const files = await this.getFilesByFolderUseCase.execute(folderId)
+      return FileMappingService.toDtoList(files)
     } catch (error) {
       throw new Error(
         `Failed to get files by folder: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -30,25 +33,16 @@ export class ApplicationFileService {
     }
   }
 
-  async getFile(fileId: string): Promise<FileWithContentDto> {
+  async getFile(fileId: string): Promise<FileDto> {
     try {
-      const file = await this.fileRepository.getById(fileId)
+      const file = await this.getFileByIdUseCase.execute(fileId)
       if (!file) {
         throw new Error('File not found')
       }
 
-      // For now, return without content - this would need to be implemented
-      // based on how file content is stored/retrieved
+      const fileDto = FileMappingService.toDto(file)
       return {
-        id: file.id,
-        name: file.name,
-        path: file.path,
-        folderId: file.folderId,
-        size: file.size,
-        mimeType: file.mimeType,
-        createdAt: file.createdAt.toISOString(),
-        updatedAt: file.updatedAt.toISOString(),
-        content: '', // TODO: Implement content retrieval
+        ...fileDto,
       }
     } catch (error) {
       throw new Error(
@@ -59,17 +53,16 @@ export class ApplicationFileService {
 
   async createFile(request: CreateFileRequest): Promise<FileDto> {
     try {
-      const fileEntity = await this.fileRepository.create(request)
-      return {
-        id: fileEntity.id,
-        name: fileEntity.name,
-        path: fileEntity.path,
-        folderId: fileEntity.folderId,
-        size: fileEntity.size,
-        mimeType: fileEntity.mimeType,
-        createdAt: fileEntity.createdAt.toISOString(),
-        updatedAt: fileEntity.updatedAt.toISOString(),
+      const createRequest = {
+        name: request.name,
+        path: request.path,
+        folderId: request.folderId,
+        size: request.size || 0,
+        mimeType: request.mimeType || 'application/octet-stream',
       }
+
+      const fileEntity = await this.createFileUseCase.execute(createRequest)
+      return FileMappingService.toDto(fileEntity)
     } catch (error) {
       throw new Error(
         `Failed to create file: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -79,17 +72,12 @@ export class ApplicationFileService {
 
   async updateFile(id: string, request: UpdateFileRequest): Promise<FileDto> {
     try {
-      const fileEntity = await this.fileRepository.update(id, request)
-      return {
-        id: fileEntity.id,
-        name: fileEntity.name,
-        path: fileEntity.path,
-        folderId: fileEntity.folderId,
-        size: fileEntity.size,
-        mimeType: fileEntity.mimeType,
-        createdAt: fileEntity.createdAt.toISOString(),
-        updatedAt: fileEntity.updatedAt.toISOString(),
+      const updateRequest = {
+        name: request.name,
       }
+
+      const fileEntity = await this.updateFileUseCase.execute(id, updateRequest)
+      return FileMappingService.toDto(fileEntity)
     } catch (error) {
       throw new Error(
         `Failed to update file: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -99,7 +87,7 @@ export class ApplicationFileService {
 
   async deleteFile(fileId: string): Promise<void> {
     try {
-      await this.fileRepository.delete(fileId)
+      await this.deleteFileUseCase.execute(fileId)
     } catch (error) {
       throw new Error(
         `Failed to delete file: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -109,17 +97,14 @@ export class ApplicationFileService {
 
   async searchFiles(query: SearchFileParams): Promise<FileDto[]> {
     try {
-      const files = await this.fileRepository.search(query)
-      return files.map((file) => ({
-        id: file.id,
-        name: file.name,
-        path: file.path,
-        folderId: file.folderId,
-        size: file.size,
-        mimeType: file.mimeType,
-        createdAt: file.createdAt.toISOString(),
-        updatedAt: file.updatedAt.toISOString(),
-      }))
+      const searchRequest = {
+        name: query.name,
+        limit: query.limit,
+        offset: query.offset,
+      }
+
+      const files = await this.searchFilesUseCase.execute(searchRequest)
+      return FileMappingService.toDtoList(files)
     } catch (error) {
       throw new Error(
         `Failed to search files: ${error instanceof Error ? error.message : 'Unknown error'}`,
