@@ -1,13 +1,13 @@
-import type { ApplicationService } from '@/application/services/ApplicationService'
+import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
 import type { FolderState } from '../state/FolderState'
-import type { CreateFolderRequest } from '@/application/dto/CreateFolderRequest'
 import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 import type { IFolderDataService } from '@/domain/interfaces/IFolderServices'
+import type { CreateFolderRequest } from '@/application/dto/FolderDto'
 
 export class FolderActions {
   constructor(
     private state: FolderState,
-    private applicationService: ApplicationService,
+    private applicationService: ApplicationFolderService,
     private loadingActions: IFolderDataService,
   ) {}
 
@@ -18,7 +18,7 @@ export class FolderActions {
       if (data.parentId === this.state.selectedFolderId.value) {
         await this.loadingActions.loadFolderChildren(this.state.selectedFolderId.value)
       }
-      return ResultFormatter.success('success','Folder berhasil dibuat')
+      return ResultFormatter.success('success', 'Folder berhasil dibuat')
     } catch (error) {
       return ResultFormatter.error(error, 'membuat folder')
     }
@@ -50,7 +50,10 @@ export class FolderActions {
 
   async createNewFolder(): Promise<any> {
     if (!this.state.selectedFolderId.value || !this.state.folderHierarchy.value) {
-      return ResultFormatter.error(new Error('Tidak ada folder yang dipilih'), 'membuat folder baru')
+      return ResultFormatter.error(
+        new Error('Tidak ada folder yang dipilih'),
+        'membuat folder baru',
+      )
     }
 
     try {
@@ -95,9 +98,9 @@ export class FolderActions {
         this.state.selectedMainFolderId.value = null
       }
 
-      return ResultFormatter.success( "success", 'Folder berhasil dihapus');
+      return ResultFormatter.success('success', 'Folder berhasil dihapus')
     } catch (error) {
-      return ResultFormatter.error(error, 'menghapus folder');
+      return ResultFormatter.error(error, 'menghapus folder')
     }
   }
 

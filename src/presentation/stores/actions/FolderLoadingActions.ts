@@ -1,14 +1,14 @@
-import type { ApplicationService } from "@/application/services/ApplicationService";
-import type { FolderState } from "../state/FolderState";
-import type { FolderItem } from "@/shared/types/explorer";
-import { FolderConverters } from "../converters/FolderConverters";
-import { convertFolderToUI } from "@/shared/utils/folderHelpers";
-import { ResultFormatter } from "@/shared/utils/ResultFormatter";
+import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
+import type { FolderState } from '../state/FolderState'
+import type { FolderItem } from '@/shared/types/explorer'
+import { FolderConverters } from '../converters/FolderConverters'
+import { convertFolderToUI } from '@/shared/utils/folderHelpers'
+import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 
 export class FolderLoadingActions {
   constructor(
     private state: FolderState,
-    private appService: ApplicationService,
+    private appService: ApplicationFolderService,
   ) {}
 
   async loadSidebarFolders(): Promise<void> {
