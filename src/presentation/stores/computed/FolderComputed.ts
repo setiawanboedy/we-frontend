@@ -1,9 +1,9 @@
-import { computed } from "vue"
-import type { FolderState } from "../state/FolderState"
-import { FolderConverters } from "../converters/FolderConverters"
+import { computed } from 'vue'
+import type { FolderState } from '../state/FolderState'
+import { FolderConverters } from '../converters/FolderConverters'
 
 export class FolderComputed {
-    constructor(private state: FolderState) {}
+  constructor(private state: FolderState) {}
 
   readonly selectedFolder = computed(() => {
     if (!this.state.selectedFolderId.value || !this.state.folderHierarchy.value) return null
@@ -12,8 +12,12 @@ export class FolderComputed {
   })
 
   readonly breadcrumbPath = computed(() => {
-    if (!this.selectedFolder.value) return ['This PC']
-    return [...this.state.currentPath.value.split(' > ').filter(Boolean)]
+    if (!this.selectedFolder.value || !this.state.folderHierarchy.value) return ['This PC']
+
+    const pathArray = this.state.folderHierarchy.value.getPathToNode(
+      this.state.selectedFolderId.value!,
+    )
+    return pathArray
   })
 
   readonly displayedFolders = computed(() => {

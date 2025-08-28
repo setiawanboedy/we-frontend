@@ -250,32 +250,32 @@ const toggleMobileSearch = () => {
         </button>
       </div>
 
-      <div v-if="hasMainFolderSelected || hasFileSelected" class="flex space-x-2">
-        <div class="relative">
-          <button class="win-button" @click="showDropdown = !showDropdown">
-            <i class="fas fa-plus text-green-600"></i>
-          </button>
-          <!-- dropdown -->
-          <div
-            v-if="showDropdown"
-            class="absolute z-10 mt-2 bg-white border border-gray-300 rounded shadow-lg min-w-[140px]"
+      <div class="relative">
+        <button class="win-button" @click="showDropdown = !showDropdown">
+          <i class="fas fa-plus text-green-600"></i>
+        </button>
+        <!-- dropdown -->
+        <div
+          v-if="showDropdown"
+          class="absolute z-10 mt-2 bg-white border border-gray-300 rounded shadow-lg min-w-[140px]"
+        >
+          <button
+            class="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
+            @click="createItem('folder')"
           >
-            <button
-              class="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
-              @click="createItem('folder')"
-            >
-              <i class="fas fa-folder text-yellow-500 mr-3 w-4"></i>
-              New Folder
-            </button>
-            <button
-              class="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
-              @click="createItem('file')"
-            >
-              <i class="fas fa-file text-blue-500 mr-3 w-4"></i>
-              New File
-            </button>
-          </div>
+            <i class="fas fa-folder text-yellow-500 mr-3 w-4"></i>
+            New Folder
+          </button>
+          <button
+            class="flex items-center w-full text-left px-4 py-2 hover:bg-gray-100"
+            @click="createItem('file')"
+          >
+            <i class="fas fa-file text-blue-500 mr-3 w-4"></i>
+            New File
+          </button>
         </div>
+      </div>
+      <div v-if="hasMainFolderSelected || hasFileSelected" class="flex space-x-2">
         <button
           v-if="hasSingleFileSelected || hasMainFolderSelected"
           class="win-button"

@@ -1,39 +1,50 @@
 export class FolderHierarchy {
   constructor(public readonly folders: ReadonlyArray<FolderNode>) {}
 
-    findById(id: string): FolderNode | null {
-        for (const folder of this.folders){
-            const found = this.findByIdRecursive(folder, id);
-            if (found) return found;
-        }
-        return null;
+  findById(id: string): FolderNode | null {
+    for (const folder of this.folders) {
+      const found = this.findByIdRecursive(folder, id)
+      if (found) return found
+    }
+    return null
+  }
+
+  private findByIdRecursive(node: FolderNode, id: string): FolderNode | null {
+    if (node.id === id) return node
+
+    for (const child of node.children) {
+      const found = this.findByIdRecursive(child, id)
+      if (found) return found
+    }
+    return null
+  }
+
+  getPathToNode(nodeId: string): string[] {
+    const node = this.findById(nodeId)
+    if (!node) return ['This PC']
+
+    const path: string[] = []
+    let current: FolderNode | null = node
+
+    while (current) {
+      path.unshift(current.name)
+      current = current.parentId ? this.findById(current.parentId) : null
     }
 
-    private findByIdRecursive(node: FolderNode, id: string): FolderNode | null {
-        if (node.id === id) return node;
+    return ['This PC', ...path]
+  }
 
-        for (const child of node.children){
-            const found = this.findByIdRecursive(child, id);
-            if (found) return found;
-        }
-
-        return null;
+  getAllIds(): string[] {
+    const ids: string[] = []
+    const traverse = (nodes: ReadonlyArray<FolderNode>) => {
+      nodes.forEach((node) => {
+        ids.push(node.id)
+        traverse(node.children)
+      })
     }
-
-
-    getAllIds(): string[] {
-        const ids: string[] = [];
-
-        const transverse = (nodes: ReadonlyArray<FolderNode>) => {
-            nodes.forEach(node => {
-                ids.push(node.id);
-                transverse(node.children);
-            });
-        };
-        transverse(this.folders);
-        return ids;
-    }
-
+    traverse(this.folders)
+    return ids
+  }
 }
 
 export class FolderNode {
