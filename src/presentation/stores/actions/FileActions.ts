@@ -4,13 +4,14 @@ import type { CreateFileRequest, UpdateFileRequest } from '@/application/dto/Fil
 import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 import type { IFileDataService } from '@/domain/interfaces/IFileServices'
 import { getFolderService } from '@/di/InjectionRegistry'
+import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
 
 export class FileActions {
   constructor(
     private state: FileState,
     private applicationService: ApplicationFileService,
     private loadingActions: IFileDataService,
-    private folderStore?: any,
+    private appFolderService: ApplicationFolderService
   ) {}
 
   async createFile(data: CreateFileRequest): Promise<any> {
@@ -68,25 +69,21 @@ export class FileActions {
   }
   async createNewFile(folderId?: string): Promise<any> {
     const targetFolderId = folderId || this.state.currentFolderId.value
-
+    
     if (!targetFolderId) {
       return ResultFormatter.error(new Error('Tidak ada folder yang dipilih'), 'membuat file baru')
     }
-
+    
     try {
-      await this.loadingActions.loadFilesByFolder(targetFolderId)
-
+      
       const uniqueName = this.generateUniqueFileName()
+      const appFolder = await this.appFolderService.getFolderById(targetFolderId)
 
       let folderPath = ''
       try {
-        const folderService = getFolderService()
-        const folderHierarchy = await folderService.getFolderHierarchy()
 
-        const folderNode = folderHierarchy.find((h) => h.id === targetFolderId)
-
-        if (folderNode) {
-          folderPath = folderNode.path || ''
+        if (appFolder?.path) {
+          folderPath = appFolder.path || ''
         }
       } catch (error) {
         console.error('Error getting folder hierarchy:', error)
@@ -105,10 +102,10 @@ export class FileActions {
         name: uniqueName,
         path: filePath,
         folderId: targetFolderId,
-        size: 0,
+        size: 1,
         mimeType: 'text/plain',
       }
-
+      
       return await this.createFile(fileData)
     } catch (error) {
       return ResultFormatter.error(error, 'membuat file baru')
@@ -189,33 +186,5 @@ export class FileActions {
     }
   }
 
-  selectFileLocal(fileId: string): void {
-    this.state.selectedFileId.value = fileId
-    this.state.selectedFileIds.value = [fileId]
-  }
 
-  clearFileSelection(): void {
-    this.state.selectedFileId.value = null
-    this.state.selectedFileIds.value = []
-  }
-
-  selectMultipleFiles(fileIds: string[]): void {
-    this.state.selectedFileIds.value = fileIds
-    this.state.selectedFileId.value = fileIds.length === 1 ? fileIds[0] : null
-  }
-
-  toggleFileSelection(fileId: string): void {
-    const index = this.state.selectedFileIds.value.indexOf(fileId)
-    if (index === -1) {
-      this.state.selectedFileIds.value.push(fileId)
-    } else {
-      this.state.selectedFileIds.value.splice(index, 1)
-    }
-
-    if (this.state.selectedFileIds.value.length === 1) {
-      this.state.selectedFileId.value = this.state.selectedFileIds.value[0]
-    } else {
-      this.state.selectedFileId.value = null
-    }
-  }
 }

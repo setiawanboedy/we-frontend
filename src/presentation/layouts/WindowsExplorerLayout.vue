@@ -98,13 +98,14 @@ const handleCreateItem = async (type: 'folder' | 'file') => {
   if (type === 'folder') {
     await folderStore.createNewFolder()
   } else {
+    
     const selectedFolderId = folderStore.selectedMainFolderId || folderStore.selectedFolderId
+    
     if (!selectedFolderId) {
       return
     }
-    const result = await fileStore.createNewFile(selectedFolderId)
-    if (!result.success) {
-    }
+    await fileStore.createNewFile(selectedFolderId)
+    
   }
 }
 

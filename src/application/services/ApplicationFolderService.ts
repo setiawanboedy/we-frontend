@@ -5,6 +5,7 @@ import type { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHiera
 import type { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
 import { FolderMappingService } from './FolderMappingService'
 import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto } from '../dto/FolderDto'
+import type { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
 
 export class ApplicationFolderService {
   constructor(
@@ -13,6 +14,7 @@ export class ApplicationFolderService {
     private readonly createFolderUseCase: CreateFolderUseCase,
     private readonly deleteFolderUseCase: DeleteFolderUseCase,
     private readonly updateFolderUseCase: UpdateFolderUseCase,
+    private readonly getFolderByIDUsecase: GetFolderByIdUseCase,
   ) {}
 
   async getFolderHierarchy(): Promise<FolderWithChildrenDto[]> {
@@ -33,6 +35,21 @@ export class ApplicationFolderService {
     } catch (error) {
       throw new Error(
         `Failed to get folder children: ${error instanceof Error ? error.message : 'Unknown error'}`,
+      )
+    }
+  }
+
+  async getFolderById(folderId: string): Promise<FolderDto | null> {
+    try {
+      const folderEntity = await this.getFolderByIDUsecase.execute(folderId)
+      if (folderEntity) {
+        
+        return FolderMappingService.entityToDto(folderEntity)
+      }
+      return null
+    } catch (error) {
+      throw new Error(
+        `Failed to get folder by id: ${error instanceof Error ? error.message : 'Unknown error'}`,
       )
     }
   }

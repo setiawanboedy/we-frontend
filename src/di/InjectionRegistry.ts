@@ -24,6 +24,7 @@ import { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildrenUse
 import { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
 import { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
 import { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
+import { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
 
 interface ServiceConfig {
   useAdvancedSearch: boolean
@@ -96,6 +97,11 @@ export class InjectionRegistry {
         return new DeleteFolderUseCase(repository)
       })
 
+      this.container.register<GetFolderByIdUseCase>('getFolderByIdUseCase', () => {
+        const repository = this.container.get<FolderRepository>('folderRepository')
+        return new GetFolderByIdUseCase(repository)
+      })
+
       this.container.register<ApplicationFolderService>('folderService', () => {
         const getFolderHierarchyUseCase = this.container.get<GetFolderHierarchyUseCase>(
           'getFolderHierarchyUseCase',
@@ -106,6 +112,7 @@ export class InjectionRegistry {
         const createFolderUseCase = this.container.get<CreateFolderUseCase>('createFolderUseCase')
         const updateFolderUseCase = this.container.get<UpdateFolderUseCase>('updateFolderUseCase')
         const deleteFolderUseCase = this.container.get<DeleteFolderUseCase>('deleteFolderUseCase')
+        const getFolderByIdUseCase = this.container.get<GetFolderByIdUseCase>('getFolderByIdUseCase')
 
         const service = new ApplicationFolderService(
           getFolderHierarchyUseCase,
@@ -113,6 +120,7 @@ export class InjectionRegistry {
           createFolderUseCase,
           deleteFolderUseCase,
           updateFolderUseCase,
+          getFolderByIdUseCase,
         )
         return service
       })

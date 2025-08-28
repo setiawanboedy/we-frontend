@@ -1,4 +1,4 @@
-import { getFileService, getFileSearchService } from '@/di/InjectionRegistry'
+import { getFileService, getFileSearchService, getFolderService } from '@/di/InjectionRegistry'
 import { defineStore } from 'pinia'
 import { FileState } from './state/FileState'
 import { FileLoadingActions } from './actions/FileLoadingActions'
@@ -10,6 +10,7 @@ import { useFolderStore } from './folderStore'
 
 export const useFileStore = defineStore('files', () => {
   const fileService = getFileService()
+  const folderService = getFolderService()
   const fileSearchService = getFileSearchService()
   const folderStore = useFolderStore()
 
@@ -21,7 +22,7 @@ export const useFileStore = defineStore('files', () => {
 
   const computed = new FileComputed(state)
 
-  const crudActions = new FileActions(state, fileService, loadingActions, folderStore)
+  const crudActions = new FileActions(state, fileService, loadingActions, folderService)
 
   return {
     ...state,
