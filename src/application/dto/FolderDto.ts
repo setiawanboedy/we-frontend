@@ -11,3 +11,15 @@ export interface FolderDto {
 export interface FolderWithChildrenDto extends FolderDto {
   children: FolderWithChildrenDto[];
 }
+
+export interface UpdateFolderRequest {
+  name?: string
+  path?: string
+  parentId?: string
+}
+
+export interface CreateFolderRequest {
+  name: string;
+  path: string;
+  parentId?: string;
+}
