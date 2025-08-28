@@ -1,10 +1,14 @@
-import { FolderRepository } from "@/infrastructure/repositories/FolderRepository";
-import { InjectionContainer } from "./InjectionContainer";
-import { ApplicationService } from "@/application/services/ApplicationService";
-import type { INavigationHistoryService, ISearchService } from "@/domain/interfaces/IFolderServices";
-import { NavigationHistoryService } from "@/application/services/NavigationHistoryService";
-import { SearchService } from "@/application/services/SearchService";
-import { AdvancedSearchService } from "@/application/services/AdvancedSearchService";
+import { FolderRepository } from '@/infrastructure/repositories/FolderRepository'
+import { FileRepository } from '@/infrastructure/repositories/FileRepository'
+import { InjectionContainer } from './InjectionContainer'
+import { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
+import { ApplicationFileService } from '@/application/services/ApplicationFileService'
+import { FileSearchService } from '@/application/services/FileSearchService'
+import type { INavigationHistoryService, ISearchService } from '@/domain/interfaces/IFolderServices'
+import type { IFileSearchService } from '@/domain/interfaces/IFileServices'
+import { NavigationHistoryService } from '@/application/services/NavigationHistoryService'
+import { SearchService } from '@/application/services/SearchService'
+import { AdvancedSearchService } from '@/application/services/AdvancedSearchService'
 
 interface ServiceConfig {
   useAdvancedSearch: boolean
@@ -51,12 +55,27 @@ export class InjectionRegistry {
         return repository
       })
 
-      this.container.register<ApplicationService>('folderService', () => {
+      this.container.register<ApplicationFolderService>('folderService', () => {
         const repository = this.container.get<FolderRepository>('folderRepository')
-        const service = new ApplicationService(repository)
+        const service = new ApplicationFolderService(repository)
         return service
       })
 
+      this.container.register<FileRepository>('fileRepository', () => {
+        const repository = new FileRepository()
+        return repository
+      })
+
+      this.container.register<ApplicationFileService>('fileService', () => {
+        const repository = this.container.get<FileRepository>('fileRepository')
+        const service = new ApplicationFileService(repository)
+        return service
+      })
+
+      this.container.register<IFileSearchService>('fileSearchService', () => {
+        const service = new FileSearchService()
+        return service
+      })
     } catch (error) {
       throw error
     }
@@ -90,7 +109,7 @@ export class InjectionRegistry {
   }
 }
 
-export const injectRegistry = new InjectionRegistry();
+export const injectRegistry = new InjectionRegistry()
 
 export const injectContainer = injectRegistry['container'] as InjectionContainer
 
@@ -105,8 +124,16 @@ export const getSearchService = (): ISearchService => {
   return injectRegistry.getSingleton<ISearchService>(serviceName)
 }
 
-export const getFolderService = (): ApplicationService => {
-  return injectRegistry.getSingleton<ApplicationService>('folderService')
+export const getFolderService = (): ApplicationFolderService => {
+  return injectRegistry.getSingleton<ApplicationFolderService>('folderService')
+}
+
+export const getFileService = (): ApplicationFileService => {
+  return injectRegistry.getSingleton<ApplicationFileService>('fileService')
+}
+
+export const getFileSearchService = (): IFileSearchService => {
+  return injectRegistry.getSingleton<IFileSearchService>('fileSearchService')
 }
 
 export function initializeServices(config?: Partial<ServiceConfig>): void {
@@ -118,7 +145,8 @@ export function initializeServices(config?: Partial<ServiceConfig>): void {
     getNavigationService()
     getSearchService()
     getFolderService()
-
+    getFileService()
+    getFileSearchService()
   } catch (error) {
     throw error
   }
