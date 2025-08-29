@@ -12,6 +12,8 @@ const hasSingleFileSelected = computed(() => fileStore.selectedFileId)
 
 const shouldShowActionButtons = computed(() => hasSingleFileSelected.value || hasMainFolderSelected.value)
 
+// const fileOrFolderId = computed(() => fileStore.selectedFileId || folderStore.selectedMainFolderId)
+
 interface Props {
   currentPath: string
   searchQuery: string
@@ -81,15 +83,20 @@ const createItem = (type: 'file' | 'folder') => {
 }
 
 const handleRename = () => {
-  if (hasSingleFileSelected.value && fileStore.selectedFileId) {
+  if (fileStore.selectedFileId) {
     emit('rename-file', fileStore.selectedFileId)
+  }
+  if (folderStore.selectedMainFolderId) {
+    emit('rename-folder', folderStore.selectedMainFolderId)
   }
 }
 
 const handleDelete = () => {
-  
-  if (hasSingleFileSelected.value && fileStore.selectedFileId) {
+  if (fileStore.selectedFileId) {
     emit('delete-file', fileStore.selectedFileId)
+  }
+  if (folderStore.selectedMainFolderId) {
+    emit('delete-folder', folderStore.selectedMainFolderId)
   }
 }
 

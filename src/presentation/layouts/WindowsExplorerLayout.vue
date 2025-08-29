@@ -52,6 +52,13 @@ const handleRenameFile = (fileId: string) => {
   renameTargetType = 'file'
   renameModalVisible.value = true
 }
+const handleRenameFolder = (folderId: string) => {
+  const folder = folderStore.displayedFolders.find((f) => f.id === folderId)
+  renameInput.value = folder ? folder.name : ''
+  renameTargetId = folderId
+  renameTargetType = 'folder'
+  renameModalVisible.value = true
+}
 
 const doRenameFolder = async (newName: string) => {
   if (!renameTargetId || !newName.trim()) return
@@ -74,12 +81,14 @@ const handleDeleteFile = (fileId: string) => {
   deleteModalVisible.value = true
 }
 
-const doDeleteFolder = async () => {
+const doDelete = async () => {
+ 
   if (deleteTargetId === null) return
-
+  
   if (deleteTargetType === 'file') {
     await fileStore.deleteFile(deleteTargetId)
   } else {
+    
     const result = await folderStore.deleteFolder(deleteTargetId)
     if (!result.success) return
   }
@@ -130,6 +139,7 @@ const toggleSidebar = () => {
       @navigate-forward="handleNavigateForward"
       @search="handleSearch"
       @rename-file="handleRenameFile"
+      @rename-folder="handleRenameFolder"
       @delete-file="handleDeleteFile"
       @delete-folder="handleDeleteFolder"
       @create-item="handleCreateItem"
@@ -202,7 +212,7 @@ const toggleSidebar = () => {
       :message="deleteMessage"
       confirm-text="Delete"
       cancel-text="Cancel"
-      @confirm="doDeleteFolder"
+      @confirm="doDelete"
     />
   </div>
 </template>

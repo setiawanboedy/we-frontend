@@ -80,6 +80,7 @@ export class ApplicationFolderService {
   }
 
   async deleteFolder(folderId: string): Promise<void> {
+    
     try {
       await this.deleteFolderUseCase.execute(folderId)
     } catch (error) {

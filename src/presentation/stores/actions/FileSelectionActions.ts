@@ -5,24 +5,12 @@ export class FileSelectionActions {
     private state: FileState,
   ) {}
 
-  async selectFile(fileId: string): Promise<void> {
-    if (this.state.isSearchMode.value) {
-      this.clearSearch()
-    }
-
-    this.state.selectedFileId.value = fileId
-  }
-
-  selectFileLocal(fileId: string): void {
+  selectFile(fileId: string): void {
     this.state.selectedFileId.value = fileId
   }
 
   clearFileSelection(): void {
     this.state.selectedFileId.value = null
-  }
-
-  toggleFileSelection(fileId: string): void {
-    this.state.selectedFileId.value = fileId
   }
 
   clearSearch(): void {

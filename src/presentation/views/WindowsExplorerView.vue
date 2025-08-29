@@ -3,6 +3,7 @@ import { computed, ref, watch } from 'vue'
 import { useFolderStore } from '../stores/folderStore'
 import { useFileStore } from '../stores/fileStore'
 import type { FolderItem } from '@/shared/types/explorer'
+import type { FileDto } from '@/application/dto/FileDto'
 
 const folderStore = useFolderStore()
 const fileStore = useFileStore()
@@ -87,9 +88,9 @@ const selectFolder = (folder: FolderItem) => {
   }
 }
 
-const selectHighlightFile = (fileId: string) => {
+const selectFile = (file: FileDto) => {
   folderStore.clearMainSelection()
-  fileStore.selectFileLocal(fileId)
+  fileStore.selectFile(file.id)
 }
 
 const handleFolderSelect = (folder: FolderItem) => {
@@ -147,7 +148,7 @@ const navigateNext = () => {
     selectFolder(folders[nextIndex])
   } else {
     const fileIndex = nextIndex - folders.length
-    selectHighlightFile(files[fileIndex].id)
+    selectFile(files[fileIndex])
   }
 }
 
@@ -180,7 +181,7 @@ const navigatePrevious = () => {
     selectFolder(folders[prevIndex])
   } else {
     const fileIndex = prevIndex - folders.length
-    selectHighlightFile(files[fileIndex].id)
+    selectFile(files[fileIndex])
   }
 }
 
@@ -420,9 +421,9 @@ const formatDate = (dateString: string): string => {
             :key="`file-${file.id}`"
             :class="[
               'flex items-center py-2 px-3 rounded cursor-default transition-colors',
-              fileStore.selectedFileId ? 'bg-blue-100 ' : 'hover:bg-blue-50',
+              fileStore.selectedFileId === file.id ? 'bg-blue-100 ' : 'hover:bg-blue-50',
             ]"
-            @click="selectHighlightFile(file.id)"
+            @click="selectFile(file)"
           >
             <i class="fas fa-file text-gray-500 w-5 mr-3 flex-shrink-0"></i>
             <!-- Desktop Layout -->

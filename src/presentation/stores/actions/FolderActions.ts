@@ -87,6 +87,7 @@ export class FolderActions {
 
   async deleteFolder(folderId: string): Promise<any> {
     try {
+      
       await this.applicationService.deleteFolder(folderId)
 
       const idx = this.state.currentFolderChildren.value.findIndex((f) => f.id === folderId)

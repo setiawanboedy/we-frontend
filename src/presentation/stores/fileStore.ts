@@ -38,13 +38,9 @@ export const useFileStore = defineStore('files', () => {
     searchFiles: searchFileActions.searchFiles.bind(searchFileActions),
     clearFileSearch: searchFileActions.clearSearch.bind(searchFileActions),
  
-
     selectFile: selectionActions.selectFile.bind(selectionActions),
-    selectFileLocal: selectionActions.selectFileLocal.bind(selectionActions),
     clearFileSelection: selectionActions.clearFileSelection.bind(selectionActions),
-    toggleFileSelection: selectionActions.toggleFileSelection.bind(selectionActions),
 
-    createFile: crudActions.createFile.bind(crudActions),
     createNewFile: crudActions.createNewFile.bind(crudActions),
     deleteFile: crudActions.deleteFile.bind(crudActions),
     renameFile: crudActions.renameFile.bind(crudActions),
