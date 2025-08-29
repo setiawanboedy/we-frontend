@@ -1,11 +1,12 @@
-import type { FolderEntity } from '@/domain/entities/FolderEntity'
+import { FolderEntity } from '@/domain/entities/FolderEntity'
 import type { IFolderRepository } from '@/domain/repositories/IFolderRepository'
 import { folderApiService } from '../api/folderApi'
 import { FolderMappingService } from '@/application/services/FolderMappingService'
 import { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
-import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
+import type { CreateFolderRequest, SearchFolderParams, UpdateFolderRequest } from '@/application/dto/FolderDto'
 
 export class FolderRepository implements IFolderRepository {
+
   async getAllWithHierarchy(): Promise<FolderHierarchy> {
     const response = await folderApiService.getAllFolders()
 
@@ -85,5 +86,17 @@ export class FolderRepository implements IFolderRepository {
     } catch {
       return false
     }
+  }
+
+ async search(query: SearchFolderParams): Promise<FolderEntity[]> {
+    const response = await folderApiService.searchFolders(query)
+
+    if (!response.success || !response.data) {
+      throw new Error(response.error || 'Failed to search files')
+    }
+
+    return response.data.map((file) =>
+      FolderEntity.fromObject(file),
+    )
   }
 }

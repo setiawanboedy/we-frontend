@@ -1,6 +1,6 @@
 import { FolderEntity } from '@/domain/entities/FolderEntity'
 import { FolderHierarchy, FolderNode } from '@/domain/entities/FolderHierarchy'
-import type { Folder, FolderWithChildren } from '@/shared/types/explorer'
+import type { Folder, FolderItem, FolderWithChildren } from '@/shared/types/explorer'
 import type { FolderDto, FolderWithChildrenDto } from '../dto/FolderDto'
 
 export class FolderMappingService {
@@ -77,6 +77,7 @@ export class FolderMappingService {
     return dtos.map((dto) => this.dtoToEntity(dto))
   }
 
+
   static dtoToEntity(dto: FolderDto): FolderEntity {
     return FolderEntity.fromObject({
       id: dto.id,
@@ -87,5 +88,21 @@ export class FolderMappingService {
       createdAt: dto.createdAt,
       updatedAt: dto.updatedAt,
     })
+  }
+
+  static dtoToFolderItem(dto: FolderDto): FolderItem {
+    return {
+      id: dto.id,
+      name: dto.name,
+      size: dto.size || '0',
+      icon: 'folder', // Default folder icon
+      path: dto.path,
+      updateAt: dto.updatedAt,
+      parentId: dto.parentId,
+    }
+  }
+
+  static dtosToFolderItems(dtos: FolderDto[]): FolderItem[] {
+    return dtos.map((dto) => this.dtoToFolderItem(dto))
   }
 }

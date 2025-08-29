@@ -3,7 +3,7 @@ import  { FolderHierarchy, FolderNode } from "@/domain/entities/FolderHierarchy"
 import type { FolderItem } from "@/shared/types/explorer"
 
 export class FolderConverters {
-     static convertDtoToDomainHierarchy(dtos: FolderWithChildrenDto[]): FolderHierarchy {
+    static convertDtoToDomainHierarchy(dtos: FolderWithChildrenDto[]): FolderHierarchy {
     const nodes = dtos.map((dto) => this.convertDtoToDomainNode(dto))
     return new FolderHierarchy(nodes)
   }

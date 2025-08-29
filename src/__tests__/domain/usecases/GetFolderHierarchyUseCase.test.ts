@@ -14,6 +14,7 @@ describe('GetFolderHierarchyUseCase', () => {
     update: Mock
     delete: Mock
     exists: Mock
+    search: Mock
   }
   let useCase: GetFolderHierarchyUseCase
 
@@ -27,6 +28,7 @@ describe('GetFolderHierarchyUseCase', () => {
       update: vi.fn(),
       delete: vi.fn(),
       exists: vi.fn(),
+      search: vi.fn(),
     }
     useCase = new GetFolderHierarchyUseCase(mockRepository as IFolderRepository)
   })

@@ -1,4 +1,3 @@
-import type { IFileSearchService } from '@/domain/interfaces/IFileServices'
 import type { FileState } from '../state/FileState'
 import type { ApplicationFileService } from '@/application/services/ApplicationFileService'
 import type { FileDto, SearchFileParams } from '@/application/dto/FileDto'
@@ -6,7 +5,7 @@ import type { FileDto, SearchFileParams } from '@/application/dto/FileDto'
 export class FileSearchActions {
   constructor(
     private state: FileState,
-    private fileSearchService: IFileSearchService,
+    private appFileService: ApplicationFileService,
   ) {}
 
   async searchFiles(query: string): Promise<FileDto[]> {
@@ -14,7 +13,12 @@ export class FileSearchActions {
     this.state.fileError.value = null
 
     try {
-      const files = await this.fileSearchService.searchFiles(query)
+      const queryParams: SearchFileParams = {
+        name: query,
+        limit: 10,
+        offset: 1
+      }
+      const files = await this.appFileService.searchFiles(queryParams)
       this.state.searchResults.value = files
       this.state.searchQuery.value = query
       this.state.isSearchMode.value = true

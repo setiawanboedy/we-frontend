@@ -14,6 +14,7 @@ describe('GetFolderChildrenUseCase', () => {
     update: Mock
     delete: Mock
     exists: Mock
+    search: Mock
   }
   let useCase: GetFolderChildrenUseCase
 
@@ -27,6 +28,7 @@ describe('GetFolderChildrenUseCase', () => {
       update: vi.fn(),
       delete: vi.fn(),
       exists: vi.fn(),
+      search: vi.fn(),
     }
     useCase = new GetFolderChildrenUseCase(mockRepository as IFolderRepository)
   })

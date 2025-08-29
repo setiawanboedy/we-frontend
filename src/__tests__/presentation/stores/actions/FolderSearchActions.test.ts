@@ -1,7 +1,8 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest'
 import { FolderSearchActions } from '../../../../presentation/stores/actions/FolderSearchActions'
 import type { FolderState } from '../../../../presentation/stores/state/FolderState'
-import type { ISearchService } from '../../../../domain/interfaces/IFolderServices'
+import type { ApplicationFolderService } from '../../../../application/services/ApplicationFolderService'
+import type { FolderDto } from '../../../../application/dto/FolderDto'
 
 // Mock dependencies
 const mockState: FolderState = {
@@ -10,74 +11,61 @@ const mockState: FolderState = {
   isSearching: { value: false },
   searchResults: { value: [] },
   sidebarFolders: { value: [] },
+  folderError: { value: null },
 } as any
 
-const mockSearchService: ISearchService = {
-  searchInFolderTree: vi.fn(),
-  normalizeQuery: vi.fn(),
-  isValidQuery: vi.fn(),
-  highlightSearchTerms: vi.fn(),
-}
+const mockAppFolderService = {
+  searchFolders: vi.fn(),
+} as any
+
 
 describe('FolderSearchActions', () => {
   let searchActions: FolderSearchActions
 
   beforeEach(() => {
     vi.clearAllMocks()
-    searchActions = new FolderSearchActions(mockState, mockSearchService)
+    searchActions = new FolderSearchActions(mockState, mockAppFolderService)
   })
 
   describe('searchFolders', () => {
     it('should search folders successfully', async () => {
       const query = 'test query'
-      const normalizedQuery = 'test query'
-      const searchResults = [
+      const mockFolders: FolderDto[] = [
         {
           id: '1',
           name: 'Test Folder',
+          path: '/test',
+          parentId: null,
           size: '0',
-          icon: 'folder',
-          updateAt: '2023-01-01T00:00:00.000Z',
+          createdAt: '2023-01-01T00:00:00.000Z',
+          updatedAt: '2023-01-01T00:00:00.000Z',
         },
       ]
 
-      vi.mocked(mockSearchService.normalizeQuery).mockReturnValue(normalizedQuery)
-      vi.mocked(mockSearchService.isValidQuery).mockReturnValue(true)
-      vi.mocked(mockSearchService.searchInFolderTree).mockReturnValue(searchResults)
+      mockAppFolderService.searchFolders.mockResolvedValue(mockFolders)
 
-      await searchActions.searchFolders(query)
+      const result = await searchActions.searchFolders(query)
 
-      expect(mockState.searchQuery.value).toBe(normalizedQuery)
+      expect(mockAppFolderService.searchFolders).toHaveBeenCalledWith({
+        name: query,
+        limit: 10,
+        offset: 1
+      })
+      expect(mockState.searchQuery.value).toBe(query)
       expect(mockState.isSearchMode.value).toBe(true)
       expect(mockState.isSearching.value).toBe(false)
-      expect(mockState.searchResults.value).toBe(searchResults)
-    })
-
-    it('should handle invalid query', async () => {
-      const query = 'invalid'
-
-      vi.mocked(mockSearchService.normalizeQuery).mockReturnValue('invalid')
-      vi.mocked(mockSearchService.isValidQuery).mockReturnValue(false)
-
-      await searchActions.searchFolders(query)
-
-      expect(mockState.isSearchMode.value).toBe(false)
-      expect(mockState.searchResults.value).toEqual([])
+      expect(result).toBe(mockFolders)
     })
 
     it('should handle search error', async () => {
       const query = 'test'
       const error = new Error('Search failed')
 
-      vi.mocked(mockSearchService.normalizeQuery).mockReturnValue('test')
-      vi.mocked(mockSearchService.isValidQuery).mockReturnValue(true)
-      vi.mocked(mockSearchService.searchInFolderTree).mockImplementation(() => {
-        throw error
-      })
+      mockAppFolderService.searchFolders.mockRejectedValue(error)
 
-      await searchActions.searchFolders(query)
+      await expect(searchActions.searchFolders(query)).rejects.toThrow('Search failed')
 
-      expect(mockState.searchResults.value).toEqual([])
+      expect(mockState.folderError.value).toBe('Search failed')
       expect(mockState.isSearching.value).toBe(false)
     })
   })

@@ -10,11 +10,10 @@ const fileStore = useFileStore()
 
 const handleFolderSelect = (folder: FolderItem) => {
   if (folderStore.isSearchMode || fileStore.isSearchMode) {
-    folderStore.clearSearch()
-    fileStore.clearSearch()
+    folderStore.clearFolderSearch()
+    fileStore.clearFileSearch()
   }
 
-  // Clear file selection when selecting folder in sidebar
   fileStore.clearFileSelection()
 
   folderStore.clearMainSelection()

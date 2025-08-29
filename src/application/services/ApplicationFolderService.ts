@@ -4,8 +4,10 @@ import type { GetFolderChildrenUseCase } from '@/domain/usecases/GetFolderChildr
 import type { GetFolderHierarchyUseCase } from '@/domain/usecases/GetFolderHierarchyUseCase'
 import type { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
 import { FolderMappingService } from './FolderMappingService'
-import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto } from '../dto/FolderDto'
+import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto, SearchFolderParams } from '../dto/FolderDto'
 import type { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
+import type { SearchFoldersUseCase } from '@/domain/usecases/SearchFoldersUseCase'
+import { folderApiService } from '../../infrastructure/api/folderApi';
 
 export class ApplicationFolderService {
   constructor(
@@ -15,6 +17,7 @@ export class ApplicationFolderService {
     private readonly deleteFolderUseCase: DeleteFolderUseCase,
     private readonly updateFolderUseCase: UpdateFolderUseCase,
     private readonly getFolderByIDUsecase: GetFolderByIdUseCase,
+    private readonly searchFolderUsecase: SearchFoldersUseCase,
   ) {}
 
   async getFolderHierarchy(): Promise<FolderWithChildrenDto[]> {
@@ -85,4 +88,15 @@ export class ApplicationFolderService {
       )
     }
   }
+
+    async searchFolders(params: SearchFolderParams): Promise<FolderDto[]> {
+      try {
+        const folders = await this.searchFolderUsecase.execute(params)
+        return FolderMappingService.entitiesToDtos(folders)
+      } catch (error) {
+        throw new Error(
+          `Failed to search files: ${error instanceof Error ? error.message : 'Unknown error'}`,
+        )
+      }
+    }
 }

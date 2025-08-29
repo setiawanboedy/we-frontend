@@ -3,12 +3,8 @@ import { FileRepository } from '@/infrastructure/repositories/FileRepository'
 import { InjectionContainer } from './InjectionContainer'
 import { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
 import { ApplicationFileService } from '@/application/services/ApplicationFileService'
-import { FileSearchService } from '@/application/services/FileSearchService'
-import type { INavigationHistoryService, ISearchService } from '@/domain/interfaces/IFolderServices'
-import type { IFileSearchService } from '@/domain/interfaces/IFileServices'
+import type { INavigationHistoryService } from '@/domain/interfaces/IFolderServices'
 import { NavigationHistoryService } from '@/application/services/NavigationHistoryService'
-import { SearchService } from '@/application/services/SearchService'
-import { AdvancedSearchService } from '@/application/services/AdvancedSearchService'
 
 // File Use Cases
 import { GetFilesByFolderUseCase } from '@/domain/usecases/GetFilesByFolderUseCase'
@@ -25,6 +21,7 @@ import { CreateFolderUseCase } from '@/domain/usecases/CreateFolderUseCase'
 import { UpdateFolderUseCase } from '@/domain/usecases/UpdateFolderUseCase'
 import { DeleteFolderUseCase } from '@/domain/usecases/DeleteFolderUseCase'
 import { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
+import { SearchFoldersUseCase } from '@/domain/usecases/SearchFoldersUseCase'
 
 interface ServiceConfig {
   useAdvancedSearch: boolean
@@ -52,17 +49,6 @@ export class InjectionRegistry {
     try {
       this.container.register<INavigationHistoryService>('navigationHistory', () => {
         const service = new NavigationHistoryService()
-        return service
-      })
-
-      this.container.register<ISearchService>('basicSearch', () => {
-        const service = new SearchService()
-        return service
-      })
-
-      this.container.register<ISearchService>('advancedSearch', () => {
-        const basicSearch = this.container.get<ISearchService>('basicSearch')
-        const service = new AdvancedSearchService(basicSearch)
         return service
       })
 
@@ -102,6 +88,11 @@ export class InjectionRegistry {
         return new GetFolderByIdUseCase(repository)
       })
 
+      this.container.register<SearchFoldersUseCase>('searchFolderUseCase', () => {
+        const repository = this.container.get<FolderRepository>('fileRepository')
+        return new SearchFoldersUseCase(repository)
+      })
+
       this.container.register<ApplicationFolderService>('folderService', () => {
         const getFolderHierarchyUseCase = this.container.get<GetFolderHierarchyUseCase>(
           'getFolderHierarchyUseCase',
@@ -113,6 +104,7 @@ export class InjectionRegistry {
         const updateFolderUseCase = this.container.get<UpdateFolderUseCase>('updateFolderUseCase')
         const deleteFolderUseCase = this.container.get<DeleteFolderUseCase>('deleteFolderUseCase')
         const getFolderByIdUseCase = this.container.get<GetFolderByIdUseCase>('getFolderByIdUseCase')
+        const searchFolderUseCase = this.container.get<SearchFoldersUseCase>('searchFolderUseCase')
 
         const service = new ApplicationFolderService(
           getFolderHierarchyUseCase,
@@ -121,6 +113,7 @@ export class InjectionRegistry {
           deleteFolderUseCase,
           updateFolderUseCase,
           getFolderByIdUseCase,
+          searchFolderUseCase,
         )
         return service
       })
@@ -181,10 +174,6 @@ export class InjectionRegistry {
         return service
       })
 
-      this.container.register<IFileSearchService>('fileSearchService', () => {
-        const service = new FileSearchService()
-        return service
-      })
     } catch (error) {
       throw error
     }
@@ -225,12 +214,6 @@ export const getNavigationService = (): INavigationHistoryService => {
   return injectRegistry.getSingleton<INavigationHistoryService>('navigationHistory')
 }
 
-export const getSearchService = (): ISearchService => {
-  const serviceName = injectRegistry.getConfig().useAdvancedSearch
-    ? 'advancedSearch'
-    : 'basicSearch'
-  return injectRegistry.getSingleton<ISearchService>(serviceName)
-}
 
 export const getFolderService = (): ApplicationFolderService => {
   return injectRegistry.getSingleton<ApplicationFolderService>('folderService')
@@ -240,9 +223,6 @@ export const getFileService = (): ApplicationFileService => {
   return injectRegistry.getSingleton<ApplicationFileService>('fileService')
 }
 
-export const getFileSearchService = (): IFileSearchService => {
-  return injectRegistry.getSingleton<IFileSearchService>('fileSearchService')
-}
 
 export function initializeServices(config?: Partial<ServiceConfig>): void {
   try {
@@ -251,10 +231,8 @@ export function initializeServices(config?: Partial<ServiceConfig>): void {
     }
 
     getNavigationService()
-    getSearchService()
     getFolderService()
     getFileService()
-    getFileSearchService()
   } catch (error) {
     throw error
   }

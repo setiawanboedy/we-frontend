@@ -1,12 +1,12 @@
-import type { SearchFileParams } from '@/application/dto/FileDto'
-import type { FileEntity } from '../entities/FileEntity'
-import type { IFileRepository } from '../repositories/IFileRepository'
+import type { SearchFolderParams } from '@/application/dto/FolderDto'
+import type { IFolderRepository } from '../repositories/IFolderRepository'
+import type { FolderEntity } from '../entities/FolderEntity'
 
-export class SearchFilesUseCase {
-  constructor(private readonly fileRepository: IFileRepository) {}
 
-  async execute(params: SearchFileParams): Promise<FileEntity[]> {
-    // Validation
+export class SearchFoldersUseCase {
+  constructor(private readonly folderRepository: IFolderRepository) {}
+
+  async execute(params: SearchFolderParams): Promise<FolderEntity[]> {
     if (params.name && this.isValidQuery(params.name)) {
       return []
     }
@@ -17,8 +17,9 @@ export class SearchFilesUseCase {
     if (params.offset !== undefined && params.offset < 0) {
       throw new Error('Offset cannot be negative')
     }
+
     try {
-      return await this.fileRepository.search(params)
+      return await this.folderRepository.search(params)
     } catch (error) {
       throw new Error(
         `Failed to search files: ${error instanceof Error ? error.message : 'Unknown error'}`,

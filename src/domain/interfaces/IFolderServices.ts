@@ -15,7 +15,6 @@ export interface ISearchService {
   searchInFolderTree(folders: FolderItem[], query: string): FolderItem[]
   normalizeQuery(query: string): string
   isValidQuery(query: string): boolean
-  highlightSearchTerms(text: string, query: string): string
 }
 
 export interface IFolderSelectionService {

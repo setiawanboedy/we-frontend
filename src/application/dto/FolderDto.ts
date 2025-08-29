@@ -1,3 +1,5 @@
+import type { SearchParams } from "./BaseDto";
+
 export interface FolderDto {
   id: string;
   name: string;
@@ -23,3 +25,5 @@ export interface CreateFolderRequest {
   path: string;
   parentId?: string;
 }
+
+export type SearchFolderParams = SearchParams

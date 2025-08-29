@@ -30,6 +30,7 @@ export class FolderSelectionActions {
   }
 
   selectMainFolder(folderId: string): void {
+    
     this.state.selectedMainFolderId.value = folderId
   }
 

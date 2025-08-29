@@ -13,6 +13,7 @@ describe('DeleteFolderUseCase', () => {
     update: Mock
     delete: Mock
     exists: Mock
+    search: Mock
   }
   let useCase: DeleteFolderUseCase
 
@@ -26,6 +27,7 @@ describe('DeleteFolderUseCase', () => {
       update: vi.fn(),
       delete: vi.fn(),
       exists: vi.fn(),
+      search: vi.fn(),
     }
     useCase = new DeleteFolderUseCase(mockRepository as IFolderRepository)
   })

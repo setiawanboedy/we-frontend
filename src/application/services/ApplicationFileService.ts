@@ -94,13 +94,7 @@ export class ApplicationFileService {
 
   async searchFiles(query: SearchFileParams): Promise<FileDto[]> {
     try {
-      const searchRequest = {
-        name: query.name,
-        limit: query.limit,
-        offset: query.offset,
-      }
-
-      const files = await this.searchFilesUseCase.execute(searchRequest)
+      const files = await this.searchFilesUseCase.execute(query)
       return FileMappingService.toDtoList(files)
     } catch (error) {
       throw new Error(

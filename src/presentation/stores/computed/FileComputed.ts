@@ -14,7 +14,7 @@ export class FileComputed {
 
   readonly selectedFiles = computed((): FileDto[] => {
     return this.state.files.value.filter((file) =>
-      this.state.selectedFileIds.value.includes(file.id),
+      this.state.selectedFileId.value = file.id,
     )
   })
 
@@ -26,11 +26,11 @@ export class FileComputed {
   })
 
   readonly hasSelection = computed((): boolean => {
-    return this.state.selectedFileIds.value.length > 0
+    return this.state.selectedFileId.value !== null
   })
 
   readonly hasSingleSelection = computed((): boolean => {
-    return this.state.selectedFileIds.value.length === 1
+    return this.state.selectedFileId.value !== null
   })
 
   readonly isLoading = computed((): boolean => {

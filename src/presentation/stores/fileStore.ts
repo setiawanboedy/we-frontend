@@ -1,4 +1,4 @@
-import { getFileService, getFileSearchService, getFolderService } from '@/di/InjectionRegistry'
+import { getFileService, getFolderService } from '@/di/InjectionRegistry'
 import { defineStore } from 'pinia'
 import { FileState } from './state/FileState'
 import { FileLoadingActions } from './actions/FileLoadingActions'
@@ -6,19 +6,17 @@ import { FileSelectionActions } from './actions/FileSelectionActions'
 import { FileSearchActions } from './actions/FileSearchActions'
 import { FileComputed } from './computed/FileComputed'
 import { FileActions } from './actions/FileActions'
-import { useFolderStore } from './folderStore'
 
 export const useFileStore = defineStore('files', () => {
   const fileService = getFileService()
   const folderService = getFolderService()
-  const fileSearchService = getFileSearchService()
-  const folderStore = useFolderStore()
 
   const state = new FileState()
 
   const loadingActions = new FileLoadingActions(state, fileService)
-  const selectionActions = new FileSelectionActions(state, loadingActions)
-  const searchActions = new FileSearchActions(state, fileSearchService)
+  const selectionActions = new FileSelectionActions(state)
+  const searchFileActions = new FileSearchActions(state, fileService)
+
 
   const computed = new FileComputed(state)
 
@@ -37,8 +35,9 @@ export const useFileStore = defineStore('files', () => {
 
     loadFilesByFolder: loadingActions.loadFilesByFolder.bind(loadingActions),
     loadFile: loadingActions.loadFile.bind(loadingActions),
-    searchFiles: searchActions.searchFiles.bind(searchActions),
-    clearSearch: searchActions.clearSearch.bind(searchActions),
+    searchFiles: searchFileActions.searchFiles.bind(searchFileActions),
+    clearFileSearch: searchFileActions.clearSearch.bind(searchFileActions),
+ 
 
     selectFile: selectionActions.selectFile.bind(selectionActions),
     selectFileLocal: selectionActions.selectFileLocal.bind(selectionActions),

@@ -1,3 +1,4 @@
+import type { FolderDto } from '@/application/dto/FolderDto'
 import type { FolderHierarchy } from '@/domain/entities/FolderHierarchy'
 import type { FolderItem } from '@/shared/types/explorer'
 import { ref } from 'vue'
@@ -14,7 +15,6 @@ export class FolderState {
   readonly currentHistoryIndex = ref<number>(-1)
 
   readonly searchQuery = ref<string>('')
-  readonly searchResults = ref<FolderItem[]>([])
   readonly isSearchMode = ref<boolean>(false)
   readonly isSearching = ref<boolean>(false)
 
@@ -23,6 +23,9 @@ export class FolderState {
 
   readonly sidebarError = ref<string | null>(null)
   readonly childrenError = ref<string | null>(null)
+
+  readonly folderError = ref<string | null>(null)
+  readonly searchResults = ref<FolderItem[]>([])
 
   reset(): void {
     this.sidebarFolders.value = []

@@ -21,13 +21,13 @@ const sortedFolders = computed(() => {
         comparison = a.name.localeCompare(b.name)
         break
       case 'date':
-        comparison = new Date(a.updateAt || '').getTime() - new Date(b.updateAt || '').getTime()
+        // comparison = new Date(a.updatedAt || '').getTime() - new Date(b.updatedAt || '').getTime()
         break
       case 'type':
         comparison = 'Folder'.localeCompare('Folder')
         break
       case 'size':
-        comparison = (parseInt(a.size) || 0) - (parseInt(b.size) || 0)
+        // comparison = (parseInt(a.size) || 0) - (parseInt(b.size) || 0)
         break
     }
     return sortOrder.value === 'asc' ? comparison : -comparison
@@ -77,9 +77,9 @@ watch(
   { immediate: true },
 )
 
-const selectHighlight = (folder: FolderItem) => {
+const selectFolder = (folder: FolderItem) => {
   fileStore.clearFileSelection()
-
+  
   if (folderStore.isSearchMode) {
     folderStore.selectMainFolder(folder.id)
   } else {
@@ -94,8 +94,8 @@ const selectHighlightFile = (fileId: string) => {
 
 const handleFolderSelect = (folder: FolderItem) => {
   if (folderStore.isSearchMode || fileStore.isSearchMode) {
-    folderStore.clearSearch()
-    fileStore.clearSearch()
+    folderStore.clearFolderSearch()
+    fileStore.clearFileSearch()
   }
   folderStore.selectFolder(folder.id)
 }
@@ -144,11 +144,16 @@ const navigateNext = () => {
   const nextIndex = (currentIndex + 1) % allItems.length
 
   if (nextIndex < folders.length) {
-    selectHighlight(folders[nextIndex])
+    selectFolder(folders[nextIndex])
   } else {
     const fileIndex = nextIndex - folders.length
     selectHighlightFile(files[fileIndex].id)
   }
+}
+
+const handleRetry = (folderStore: any) => {
+  folderStore.loadFolderChildren(folderStore.selectedFolderId)
+  fileStore.loadFilesByFolder(folderStore.selectedFolderId)
 }
 
 const navigatePrevious = () => {
@@ -172,7 +177,7 @@ const navigatePrevious = () => {
   const prevIndex = currentIndex <= 0 ? allItems.length - 1 : currentIndex - 1
 
   if (prevIndex < folders.length) {
-    selectHighlight(folders[prevIndex])
+    selectFolder(folders[prevIndex])
   } else {
     const fileIndex = prevIndex - folders.length
     selectHighlightFile(files[fileIndex].id)
@@ -325,7 +330,7 @@ const formatDate = (dateString: string): string => {
           }}
         </div>
         <button
-          @click="(folderStore.clearSearch(), fileStore.clearSearch())"
+          @click="(folderStore.clearFolderSearch(), fileStore.clearFileSearch())"
           class="mt-1 text-xs text-blue-600 underline hover:no-underline"
         >
           Clear search
@@ -348,10 +353,7 @@ const formatDate = (dateString: string): string => {
         </div>
         <button
           v-if="folderStore.selectedFolderId"
-          @click="
-            (folderStore.loadFolderChildren(folderStore.selectedFolderId),
-            fileStore.loadFilesByFolder(folderStore.selectedFolderId))
-          "
+          @click="handleRetry"
           class="mt-2 text-xs text-red-700 underline hover:no-underline"
         >
           Retry
@@ -392,8 +394,7 @@ const formatDate = (dateString: string): string => {
               'flex items-center py-2 px-3 rounded cursor-default transition-colors',
               folderStore.selectedMainFolderId === folder.id ? 'bg-blue-100' : 'hover:bg-blue-50',
             ]"
-            @click="selectHighlight(folder)"
-            @dblclick="handleFolderSelect(folder)"
+            @click="selectFolder(folder)"
           >
             <i class="fas fa-folder text-yellow-500 w-5 mr-3 flex-shrink-0"></i>
             <!-- Desktop Layout -->
@@ -419,7 +420,7 @@ const formatDate = (dateString: string): string => {
             :key="`file-${file.id}`"
             :class="[
               'flex items-center py-2 px-3 rounded cursor-default transition-colors',
-              fileStore.selectedFileIds.includes(file.id) ? 'bg-blue-100 ' : 'hover:bg-blue-50',
+              fileStore.selectedFileId ? 'bg-blue-100 ' : 'hover:bg-blue-50',
             ]"
             @click="selectHighlightFile(file.id)"
           >

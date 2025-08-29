@@ -1,4 +1,4 @@
-import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
+import type { CreateFolderRequest, SearchFolderParams, UpdateFolderRequest } from '@/application/dto/FolderDto'
 import type { FolderEntity } from '../entities/FolderEntity'
 import type { FolderHierarchy } from '../entities/FolderHierarchy'
 
@@ -18,4 +18,6 @@ export interface IFolderRepository {
   delete(id: string): Promise<void>
 
   exists(id: string): Promise<boolean>
+
+  search(query: SearchFolderParams): Promise<FolderEntity[]>
 }

@@ -1,4 +1,4 @@
-import { getFolderService, getNavigationService, getSearchService } from '@/di/InjectionRegistry'
+import { getFolderService, getNavigationService } from '@/di/InjectionRegistry'
 import { defineStore } from 'pinia'
 import { FolderState } from './state/FolderState'
 import { FolderLoadingActions } from './actions/FolderLoadingActions'
@@ -11,19 +11,18 @@ import { FolderActions } from './actions/FolderActions'
 
 export const useFolderStore = defineStore('folders', () => {
   const navigationService: INavigationHistoryService = getNavigationService()
-  const searchService: ISearchService = getSearchService()
-  const appService = getFolderService()
+  const appFolderService = getFolderService()
 
   const state = new FolderState()
 
-  const loadingActions = new FolderLoadingActions(state, appService)
+  const loadingActions = new FolderLoadingActions(state, appFolderService)
   const selectionActions = new FolderSelectionActions(state, loadingActions, navigationService)
-  const searchActions = new FolderSearchActions(state, searchService)
+  const searchFolderActions = new FolderSearchActions(state, appFolderService)
   const helperActions = new FolderHelperActions(state)
 
   const computed = new FolderComputed(state)
 
-  const crudActions = new FolderActions(state, appService, loadingActions)
+  const crudActions = new FolderActions(state, appFolderService, loadingActions)
 
   function initialize() {
     loadingActions.loadSidebarFolders()
@@ -45,8 +44,8 @@ export const useFolderStore = defineStore('folders', () => {
     clearMainSelection: selectionActions.clearMainSelection.bind(selectionActions),
     navigateBack: selectionActions.navigateBack.bind(selectionActions),
     navigateForward: selectionActions.navigateForward.bind(selectionActions),
-    searchFolders: searchActions.searchFolders.bind(searchActions),
-    clearSearch: searchActions.clearSearch.bind(searchActions),
+    searchFolders: searchFolderActions.searchFolders.bind(searchFolderActions),
+    clearFolderSearch: searchFolderActions.clearSearch.bind(searchFolderActions),
     createFolder: crudActions.createFolder.bind(crudActions),
     createNewFolder: crudActions.createNewFolder.bind(crudActions),
     deleteFolder: crudActions.deleteFolder.bind(crudActions),

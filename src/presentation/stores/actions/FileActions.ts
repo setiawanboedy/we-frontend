@@ -150,9 +150,7 @@ export class FileActions {
         this.state.selectedFileId.value = null
       }
 
-      this.state.selectedFileIds.value = this.state.selectedFileIds.value.filter(
-        (id) => id !== fileId,
-      )
+      this.state.selectedFileId.value = fileId
 
       return ResultFormatter.success('success', 'File berhasil dihapus')
     } catch (error) {

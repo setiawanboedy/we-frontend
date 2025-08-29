@@ -25,9 +25,6 @@ export class AdvancedSearchService implements ISearchService {
   isValidQuery(query: string): boolean {
     return this.basicSearchService.isValidQuery(query)
   }
-  highlightSearchTerms(text: string, query: string): string {
-    return this.basicSearchService.highlightSearchTerms(text, query)
-  }
 
   private fuzzySearchInFolderTree(folders: FolderItem[], query: string): SearchResultFolderItem[] {
     const results: SearchResultFolderItem[] = []

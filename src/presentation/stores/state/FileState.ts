@@ -4,7 +4,6 @@ import { ref } from 'vue'
 export class FileState {
   readonly files = ref<FileDto[]>([])
   readonly selectedFileId = ref<string | null>(null)
-  readonly selectedFileIds = ref<string[]>([])
   readonly currentFolderId = ref<string | null>(null)
 
   readonly searchQuery = ref<string>('')
@@ -26,7 +25,6 @@ export class FileState {
   reset(): void {
     this.files.value = []
     this.selectedFileId.value = null
-    this.selectedFileIds.value = []
     this.currentFolderId.value = null
     this.searchQuery.value = ''
     this.searchResults.value = []

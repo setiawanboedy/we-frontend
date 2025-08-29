@@ -8,6 +8,7 @@ import type {
 } from '@/application/dto/FolderDto'
 import { FolderMappingService } from '@/application/services/FolderMappingService'
 import { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
+import type { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
 
 // Mock the use cases
 vi.mock('@/domain/usecases/GetFolderHierarchyUseCase', () => ({
@@ -40,6 +41,18 @@ vi.mock('@/domain/usecases/UpdateFolderUseCase', () => ({
   })),
 }))
 
+vi.mock('@/domain/usecases/SearchFolderUseCase', () => ({
+  SearchFolderUseCase: vi.fn().mockImplementation(() => ({
+    execute: vi.fn(),
+  })),
+}))
+
+vi.mock('@/domain/usecases/GetFolderByIdUseCase', () => ({
+  GetFolderByIdUseCase: vi.fn().mockImplementation(() => ({
+    execute: vi.fn(),
+  })),
+}))
+
 vi.mock('@/application/services/FolderMappingService', () => ({
   FolderMappingService: {
     hierarchyToDtos: vi.fn(),
@@ -56,6 +69,8 @@ describe('ApplicationService', () => {
   let mockCreateFolderUseCase: any
   let mockDeleteFolderUseCase: any
   let mockUpdateFolderUseCase: any
+  let mockGetFolderByIdUseCase: any
+  let mockSearchFolderUseCase: any
 
   beforeEach(() => {
     vi.clearAllMocks()
@@ -76,6 +91,12 @@ describe('ApplicationService', () => {
     mockUpdateFolderUseCase = {
       execute: vi.fn(),
     }
+    mockGetFolderByIdUseCase = {
+      execute: vi.fn(),
+    }
+    mockSearchFolderUseCase = {
+      execute: vi.fn(),
+    }
 
     applicationService = new ApplicationFolderService(
       mockGetFolderHierarchyUseCase,
@@ -83,6 +104,9 @@ describe('ApplicationService', () => {
       mockCreateFolderUseCase,
       mockDeleteFolderUseCase,
       mockUpdateFolderUseCase,
+      mockGetFolderByIdUseCase,
+      mockSearchFolderUseCase,
+
     )
   })
 

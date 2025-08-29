@@ -1,3 +1,5 @@
+import type { SearchParams } from "./BaseDto"
+
 export interface FileDto {
   id: string
   name: string
@@ -23,8 +25,4 @@ export interface UpdateFileRequest {
 }
 
 
-export interface SearchFileParams {
-  name?: string;
-  limit?: number;
-  offset?: number;
-}
+export type SearchFileParams = SearchParams

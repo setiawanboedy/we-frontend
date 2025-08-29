@@ -127,3 +127,23 @@ bun run build
 ```sh
 bun lint
 ```
+
+
+Archive
+Personal
+Work
+Family
+Screenshots
+Vacation
+Data Science
+Mobile Apps
+- Flutter
+- React Native
+Web Development
+- Node.js APIs
+- React Projects
+- Vue Projects
+Documents
+Downloads
+Pictures
+Projects

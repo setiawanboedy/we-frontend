@@ -121,16 +121,7 @@ export class FileRepository implements IFileRepository {
     }
 
     return response.data.map((file) =>
-      FileEntity.fromObject({
-        id: file.id,
-        name: file.name,
-        path: file.path,
-        folderId: file.folderId,
-        size: file.size,
-        mimeType: file.mimeType,
-        createdAt: file.createdAt,
-        updatedAt: file.updatedAt,
-      }),
+      FileEntity.fromObject(file),
     )
   }
 }

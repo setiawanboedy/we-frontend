@@ -12,6 +12,8 @@ interface Emits {
   (e: 'folder-select', folder: FolderItem): void
 }
 
+
+
 const props = defineProps<Props>()
 const emit = defineEmits<Emits>()
 const folderStore = useFolderStore()

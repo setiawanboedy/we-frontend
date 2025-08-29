@@ -8,13 +8,9 @@ const folderStore = useFolderStore()
 const fileStore = useFileStore()
 
 const hasMainFolderSelected = computed(() => !!folderStore.selectedMainFolderId)
-const hasFileSelected = computed(() => fileStore.selectedFileIds.length > 0)
-const hasSingleFileSelected = computed(() => fileStore.selectedFileIds.length === 1)
+const hasSingleFileSelected = computed(() => fileStore.selectedFileId)
 
-const shouldShowActionButtons = computed(() => hasFileSelected.value || hasMainFolderSelected.value)
-const shouldShowRenameButton = computed(
-  () => hasSingleFileSelected.value || hasMainFolderSelected.value,
-)
+const shouldShowActionButtons = computed(() => hasSingleFileSelected.value || hasMainFolderSelected.value)
 
 interface Props {
   currentPath: string
@@ -32,7 +28,7 @@ interface Emits {
   (e: 'navigate-to', path: string): void
   (e: 'rename-file', fileId: string): void
   (e: 'rename-folder', folderId: string): void
-  (e: 'delete-files', fileIds: string[]): void
+  (e: 'delete-file', fileId: string): void
   (e: 'delete-folder', folderId: string): void
   (e: 'create-item', type: 'folder' | 'file'): void
   (e: 'toggle-sidebar'): void
@@ -71,8 +67,8 @@ const clearSearch = () => {
     searchTimeout = null
   }
   emit('search', '')
-  folderStore.clearSearch()
-  fileStore.clearSearch()
+  folderStore.clearFolderSearch()
+  fileStore.clearFileSearch()
 }
 
 const handleBreadcrumbClick = (path: string) => {
@@ -84,22 +80,22 @@ const createItem = (type: 'file' | 'folder') => {
   emit('create-item', type)
 }
 
-const handleRenameFile = () => {
+const handleRename = () => {
   if (hasSingleFileSelected.value && fileStore.selectedFileId) {
     emit('rename-file', fileStore.selectedFileId)
   }
 }
 
-const handleDeleteFiles = () => {
-  if (hasFileSelected.value) {
-    emit('delete-files', fileStore.selectedFileIds)
+const handleDelete = () => {
+  
+  if (hasSingleFileSelected.value && fileStore.selectedFileId) {
+    emit('delete-file', fileStore.selectedFileId)
   }
 }
 
 const toggleMobileSearch = () => {
   showMobileSearch.value = !showMobileSearch.value
   if (showMobileSearch.value) {
-    // Focus search input when opened
     setTimeout(() => {
       searchInput.value?.focus()
     }, 100)
@@ -152,17 +148,16 @@ const toggleMobileSearch = () => {
         <!-- Action buttons for selection -->
         <div v-if="shouldShowActionButtons" class="flex space-x-1">
           <button
-            v-if="shouldShowRenameButton"
             class="win-button p-1"
             title="Rename"
-            @click="handleRenameFile"
+            @click="handleRename"
           >
             <i class="fas fa-edit text-gray-600 text-sm"></i>
           </button>
           <button
             class="win-button win-button-danger p-1"
             title="Delete"
-            @click="handleDeleteFiles"
+            @click="handleDelete"
           >
             <i class="fas fa-trash text-red-600 text-sm"></i>
           </button>
@@ -278,15 +273,14 @@ const toggleMobileSearch = () => {
 
       <div v-if="shouldShowActionButtons" class="flex space-x-2">
         <button
-          v-if="shouldShowRenameButton"
           class="win-button"
           title="Rename"
-          @click="handleRenameFile"
+          @click="handleRename"
         >
           <i class="fas fa-edit text-gray-600 mr-1"></i>
           <span class="text-sm">Rename</span>
         </button>
-        <button class="win-button win-button-danger" title="Delete" @click="handleDeleteFiles">
+        <button class="win-button win-button-danger" title="Delete" @click="handleDelete">
           <i class="fas fa-trash text-red-600 mr-1"></i>
           <span class="text-sm">
             Delete
