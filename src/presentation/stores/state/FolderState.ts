@@ -23,6 +23,8 @@ export class FolderState {
 
   readonly sidebarError = ref<string | null>(null)
   readonly childrenError = ref<string | null>(null)
+  readonly isUpdating = ref(false)
+  readonly updateError = ref<string | null>(null)
 
   readonly folderError = ref<string | null>(null)
   readonly searchResults = ref<FolderItem[]>([])

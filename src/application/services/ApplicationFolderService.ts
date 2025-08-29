@@ -8,6 +8,7 @@ import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto, SearchFolde
 import type { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
 import type { SearchFoldersUseCase } from '@/domain/usecases/SearchFoldersUseCase'
 import { folderApiService } from '../../infrastructure/api/folderApi';
+import type { UpdateFileRequest } from '../dto/FileDto'
 
 export class ApplicationFolderService {
   constructor(
@@ -68,9 +69,9 @@ export class ApplicationFolderService {
     }
   }
 
-  async updateFolder(id: string, data: { name: string }): Promise<FolderDto> {
+  async updateFolder(id: string, data: UpdateFileRequest): Promise<FolderDto> {
     try {
-      const folderEntity = await this.updateFolderUseCase.execute(id, { name: data.name })
+      const folderEntity = await this.updateFolderUseCase.execute(id, data)
       return FolderMappingService.entityToDto(folderEntity)
     } catch (error) {
       throw new Error(

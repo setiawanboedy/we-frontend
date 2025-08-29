@@ -17,7 +17,6 @@ export interface FolderWithChildrenDto extends FolderDto {
 export interface UpdateFolderRequest {
   name?: string
   path?: string
-  parentId?: string
 }
 
 export interface CreateFolderRequest {

@@ -2,7 +2,7 @@ import type { ApplicationFolderService } from '@/application/services/Applicatio
 import type { FolderState } from '../state/FolderState'
 import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 import type { IFolderDataService } from '@/domain/interfaces/IFolderServices'
-import type { CreateFolderRequest } from '@/application/dto/FolderDto'
+import type { CreateFolderRequest, UpdateFolderRequest } from '@/application/dto/FolderDto'
 
 export class FolderActions {
   constructor(
@@ -33,14 +33,9 @@ export class FolderActions {
       return baseName
     }
 
-    const copyName = `${baseName}-copy`
-    if (!existingNames.includes(copyName.toLowerCase())) {
-      return copyName
-    }
-
     let counter = 2
     while (true) {
-      const numberedCopyName = `${baseName}-copy${counter}`
+      const numberedCopyName = `${baseName} (${counter})`
       if (!existingNames.includes(numberedCopyName.toLowerCase())) {
         return numberedCopyName
       }
@@ -107,20 +102,68 @@ export class FolderActions {
     }
   }
 
-  async renameFolder(folderId: string, newName: string): Promise<any> {
-    try {
-      await this.applicationService.updateFolder(folderId, { name: newName })
+  // async renameFolder(folderId: string, newName: string): Promise<any> {
+  //   try {
+  //     await this.applicationService.updateFolder(folderId, { name: newName })
 
-      const folder = this.state.currentFolderChildren.value.find((f) => f.id === folderId)
-      if (folder) folder.name = newName
+  //     const folder = this.state.currentFolderChildren.value.find((f) => f.id === folderId)
+  //     if (folder) folder.name = newName
+
+  //     if (this.state.folderHierarchy.value) {
+  //       await this.loadingActions.loadSidebarFolders()
+  //     }
+
+  //     return ResultFormatter.success('success', 'Folder berhasil di-rename')
+  //   } catch (error) {
+  //     return ResultFormatter.error(error, 'rename folder')
+  //   }
+  // }
+
+
+  async updateFolder(folderId: string, data: UpdateFolderRequest): Promise<any> {
+    try {
+      this.state.isUpdating.value = true
+      this.state.updateError.value = null
+
+      const folder = await this.applicationService.updateFolder(folderId, data)
+  
 
       if (this.state.folderHierarchy.value) {
         await this.loadingActions.loadSidebarFolders()
       }
 
-      return ResultFormatter.success('success', 'Folder berhasil di-rename')
+      return ResultFormatter.success(folder, 'Folder berhasil diupdate')
     } catch (error) {
-      return ResultFormatter.error(error, 'rename folder')
+      this.state.updateError.value =
+        error instanceof Error ? error.message : 'Failed to update folder'
+      return ResultFormatter.error(error, 'mengupdate folder')
+    } finally {
+      this.state.isUpdating.value = false
+    }
+  }
+
+  async renameFolder(folderId: string, newName: string): Promise<any> {
+    try {
+      const currentFolder = this.state.folderHierarchy.value?.findById(folderId)
+      if (!currentFolder) {
+        return ResultFormatter.error(new Error('Folder not found'), 'rename folder')
+      }
+
+      const currentPath = currentFolder.path
+      const lastSlashIndex = currentPath.lastIndexOf('/')
+      const directoryPath = lastSlashIndex >= 0 ? currentPath.substring(0, lastSlashIndex) : ''
+
+      const newPath = directoryPath ? `${directoryPath}/${newName}` : newName
+
+      const folder = this.state.currentFolderChildren.value.find((f) => f.id === folderId)
+      if (folder) folder.name = newName
+
+      return await this.updateFolder(folderId, {
+        name: newName,
+        path: newPath,
+      })
+    } catch (error) {
+      return ResultFormatter.error(error, 'rename file')
     }
   }
 }
