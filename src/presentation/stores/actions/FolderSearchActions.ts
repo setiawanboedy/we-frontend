@@ -1,8 +1,6 @@
 import type { FolderState } from '../state/FolderState'
 import type { FolderDto, SearchFolderParams } from '@/application/dto/FolderDto'
 import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
-import { FolderMappingService } from '@/application/services/FolderMappingService'
-import type { FolderItem } from '@/shared/types/explorer'
 import { convertFolderToUI } from '@/shared/utils/folderHelpers'
 
 export class FolderSearchActions {

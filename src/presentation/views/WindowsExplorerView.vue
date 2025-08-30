@@ -92,12 +92,13 @@ const selectFile = (file: FileItem) => {
   fileStore.selectFile(file.id)
 }
 
-const handleFolderSelect = (folder: FolderItem) => {
+const handleDoubleFolderSelect = (folder: FolderItem) => {
   if (folderStore.isSearchMode || fileStore.isSearchMode) {
     folderStore.clearFolderSearch()
     fileStore.clearFileSearch()
   }
   folderStore.selectFolder(folder.id)
+  folderStore.clearMainSelection()
 }
 
 
@@ -293,7 +294,7 @@ const handleRetry = (folderStore: any) => {
               folderStore.selectedMainFolderId === folder.id ? 'bg-blue-100' : 'hover:bg-blue-50',
             ]"
             @click="selectFolder(folder)"
-            @dblclick="handleFolderSelect(folder)"
+            @dblclick="handleDoubleFolderSelect(folder)"
           >
             <i class="fas fa-folder text-yellow-500 w-5 mr-3 flex-shrink-0"></i>
             <!-- Desktop Layout -->
