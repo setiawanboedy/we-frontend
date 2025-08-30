@@ -1,4 +1,7 @@
-import type { IFolderDataService, INavigationHistoryService } from '@/domain/interfaces/IFolderServices'
+import type {
+  IFolderDataService,
+  INavigationHistoryService,
+} from '@/domain/interfaces/IFolderServices'
 import type { FolderState } from '../state/FolderState'
 
 export class FolderSelectionActions {
@@ -30,7 +33,6 @@ export class FolderSelectionActions {
   }
 
   selectMainFolder(folderId: string): void {
-    
     this.state.selectedMainFolderId.value = folderId
   }
 
@@ -38,12 +40,12 @@ export class FolderSelectionActions {
     this.state.selectedMainFolderId.value = null
   }
 
-    async navigateBack(): Promise<void> {
+  async navigateBack(): Promise<void> {
     if (this.state.currentHistoryIndex.value > 0) {
       this.state.currentHistoryIndex.value--
       const folderId = this.state.navigationHistory.value[this.state.currentHistoryIndex.value]
       if (folderId) {
-        await this.selectFolder(folderId, true) 
+        await this.selectFolder(folderId, true)
       }
     }
   }

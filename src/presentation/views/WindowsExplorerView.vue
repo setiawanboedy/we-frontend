@@ -22,13 +22,13 @@ const sortedFolders = computed(() => {
         comparison = a.name.localeCompare(b.name)
         break
       case 'date':
-        // comparison = new Date(a.updatedAt || '').getTime() - new Date(b.updatedAt || '').getTime()
+        comparison = new Date(a.updateAt || '').getTime() - new Date(b.updateAt || '').getTime()
         break
       case 'type':
         comparison = 'Folder'.localeCompare('Folder')
         break
       case 'size':
-        // comparison = (parseInt(a.size) || 0) - (parseInt(b.size) || 0)
+        comparison = (parseInt(a.size) || 0) - (parseInt(b.size) || 0)
         break
     }
     return sortOrder.value === 'asc' ? comparison : -comparison
@@ -101,103 +101,12 @@ const handleFolderSelect = (folder: FolderItem) => {
   folderStore.selectFolder(folder.id)
 }
 
-const handleKeyDown = (event: KeyboardEvent) => {
-  if (sortedFolders.value.length === 0 && sortedFiles.value.length === 0) return
-
-  switch (event.key) {
-    case 'ArrowDown':
-      event.preventDefault()
-      navigateNext()
-      break
-    case 'ArrowUp':
-      event.preventDefault()
-      navigatePrevious()
-      break
-    case 'Enter':
-      event.preventDefault()
-      activateSelected()
-      break
-    case 'Escape':
-      event.preventDefault()
-      clearSelection()
-      break
-  }
-}
-
-const navigateNext = () => {
-  const folders = sortedFolders.value
-  const files = sortedFiles.value
-  const allItems = [...folders, ...files]
-
-  if (allItems.length === 0) return
-
-  let currentIndex = -1
-
-  if (folderStore.selectedMainFolderId) {
-    currentIndex = folders.findIndex((f) => f.id === folderStore.selectedMainFolderId)
-    if (currentIndex === -1) {
-      currentIndex = folders.length + files.findIndex((f) => f.id === fileStore.selectedFileId)
-    }
-  } else if (fileStore.selectedFileId) {
-    currentIndex = folders.length + files.findIndex((f) => f.id === fileStore.selectedFileId)
-  }
-
-  const nextIndex = (currentIndex + 1) % allItems.length
-
-  if (nextIndex < folders.length) {
-    selectFolder(folders[nextIndex])
-  } else {
-    const fileIndex = nextIndex - folders.length
-    selectFile(files[fileIndex])
-  }
-}
 
 const handleRetry = (folderStore: any) => {
   folderStore.loadFolderChildren(folderStore.selectedFolderId)
   fileStore.loadFilesByFolder(folderStore.selectedFolderId)
 }
 
-const navigatePrevious = () => {
-  const folders = sortedFolders.value
-  const files = sortedFiles.value
-  const allItems = [...folders, ...files]
-
-  if (allItems.length === 0) return
-
-  let currentIndex = -1
-
-  if (folderStore.selectedMainFolderId) {
-    currentIndex = folders.findIndex((f) => f.id === folderStore.selectedMainFolderId)
-    if (currentIndex === -1) {
-      currentIndex = folders.length + files.findIndex((f) => f.id === fileStore.selectedFileId)
-    }
-  } else if (fileStore.selectedFileId) {
-    currentIndex = folders.length + files.findIndex((f) => f.id === fileStore.selectedFileId)
-  }
-
-  const prevIndex = currentIndex <= 0 ? allItems.length - 1 : currentIndex - 1
-
-  if (prevIndex < folders.length) {
-    selectFolder(folders[prevIndex])
-  } else {
-    const fileIndex = prevIndex - folders.length
-    selectFile(files[fileIndex])
-  }
-}
-
-const activateSelected = () => {
-  if (folderStore.selectedMainFolderId) {
-    const folder = sortedFolders.value.find((f) => f.id === folderStore.selectedMainFolderId)
-    if (folder) {
-      handleFolderSelect(folder)
-    }
-  }
-}
-
-const clearSelection = () => {
-  folderStore.clearMainSelection()
-  fileStore.clearFileSelection()
-}
 
 const formatDate = (dateString: string): string => {
   const date = new Date(dateString)
@@ -212,7 +121,7 @@ const formatDate = (dateString: string): string => {
 </script>
 
 <template>
-  <div class="flex-1 bg-white" @keydown="handleKeyDown" tabindex="0">
+  <div class="flex-1 bg-white" >
     <!-- Desktop Header -->
     <div class="hidden md:block bg-gray-50 border-b border-gray-200 px-4 py-2">
       <div class="grid grid-cols-12 gap-4 text-sm font-medium text-gray-600">
