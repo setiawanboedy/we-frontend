@@ -1,13 +1,14 @@
 import type { FileDto } from '@/application/dto/FileDto'
+import type { FileItem } from '@/shared/types/explorer'
 import { ref } from 'vue'
 
 export class FileState {
-  readonly files = ref<FileDto[]>([])
+  readonly files = ref<FileItem[]>([])
   readonly selectedFileId = ref<string | null>(null)
   readonly currentFolderId = ref<string | null>(null)
 
   readonly searchQuery = ref<string>('')
-  readonly searchResults = ref<FileDto[]>([])
+  readonly searchResults = ref<FileItem[]>([])
   readonly isSearchMode = ref<boolean>(false)
   readonly isSearching = ref<boolean>(false)
 

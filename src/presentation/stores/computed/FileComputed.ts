@@ -1,24 +1,25 @@
 import { computed } from 'vue'
 import type { FileState } from '../state/FileState'
 import type { FileDto } from '@/application/dto/FileDto'
+import type { FileItem } from '@/shared/types/explorer'
 
 export class FileComputed {
   constructor(private state: FileState) {}
 
-  readonly selectedFile = computed((): FileDto | null => {
+  readonly selectedFile = computed((): FileItem | null => {
     if (!this.state.selectedFileId.value) return null
     return (
       this.state.files.value.find((file) => file.id === this.state.selectedFileId.value) || null
     )
   })
 
-  readonly selectedFiles = computed((): FileDto[] => {
+  readonly selectedFiles = computed((): FileItem[] => {
     return this.state.files.value.filter((file) =>
       this.state.selectedFileId.value = file.id,
     )
   })
 
-  readonly displayedFiles = computed((): FileDto[] => {
+  readonly displayedFiles = computed((): FileItem[] => {
     if (this.state.isSearchMode.value) {
       return this.state.searchResults.value
     }

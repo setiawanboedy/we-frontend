@@ -1,6 +1,7 @@
 import type { FileState } from '../state/FileState'
 import type { ApplicationFileService } from '@/application/services/ApplicationFileService'
 import type { FileDto, SearchFileParams } from '@/application/dto/FileDto'
+import { convertFileToUI } from '@/shared/utils/fileHelpers'
 
 export class FileSearchActions {
   constructor(
@@ -19,7 +20,7 @@ export class FileSearchActions {
         offset: 0
       }
       const files = await this.appFileService.searchFiles(queryParams)
-      this.state.searchResults.value = files
+      this.state.searchResults.value = files.map(convertFileToUI)
       this.state.searchQuery.value = query
       this.state.isSearchMode.value = true
       return files

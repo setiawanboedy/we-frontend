@@ -1,3 +1,4 @@
+import type { FileItem } from '@/shared/types/explorer'
 import { FileEntity } from '../../domain/entities/FileEntity'
 import type { FileDto } from '../dto/FileDto'
 
@@ -34,5 +35,18 @@ export class FileMappingService {
 
   static toEntityList(dtos: FileDto[]): FileEntity[] {
     return dtos.map((dto) => this.toEntity(dto))
+  }
+
+  static dtoToFileItem(dto: FileDto): FileItem {
+    return {
+      id: dto.id,
+      name: dto.name,
+      size: dto.size,
+      icon: 'file',
+      path: dto.path,
+      updatedAt: dto.updatedAt,
+      folderId: dto.folderId,
+      mimeType: dto.mimeType,
+    }
   }
 }

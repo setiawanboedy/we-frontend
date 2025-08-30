@@ -3,6 +3,7 @@ import type { FolderDto, SearchFolderParams } from '@/application/dto/FolderDto'
 import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
 import { FolderMappingService } from '@/application/services/FolderMappingService'
 import type { FolderItem } from '@/shared/types/explorer'
+import { convertFolderToUI } from '@/shared/utils/folderHelpers'
 
 export class FolderSearchActions {
   constructor(
@@ -23,7 +24,7 @@ export class FolderSearchActions {
       
       const folders = await this.appFolderService.searchFolders(queryParams)
       
-      this.state.searchResults.value = FolderMappingService.dtosToFolderItems(folders)
+      this.state.searchResults.value = folders.map(convertFolderToUI)
       this.state.searchQuery.value = query
       this.state.isSearchMode.value = true
       return folders

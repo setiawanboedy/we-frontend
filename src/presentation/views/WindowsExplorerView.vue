@@ -2,8 +2,7 @@
 import { computed, ref, watch } from 'vue'
 import { useFolderStore } from '../stores/folderStore'
 import { useFileStore } from '../stores/fileStore'
-import type { FolderItem } from '@/shared/types/explorer'
-import type { FileDto } from '@/application/dto/FileDto'
+import type { FileItem, FolderItem } from '@/shared/types/explorer'
 
 const folderStore = useFolderStore()
 const fileStore = useFileStore()
@@ -88,7 +87,7 @@ const selectFolder = (folder: FolderItem) => {
   }
 }
 
-const selectFile = (file: FileDto) => {
+const selectFile = (file: FileItem) => {
   folderStore.clearMainSelection()
   fileStore.selectFile(file.id)
 }
@@ -107,17 +106,6 @@ const handleRetry = (folderStore: any) => {
   fileStore.loadFilesByFolder(folderStore.selectedFolderId)
 }
 
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString)
-  return date.toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
-  })
-}
 </script>
 
 <template>
@@ -339,14 +327,14 @@ const formatDate = (dateString: string): string => {
             <!-- Desktop Layout -->
             <div class="hidden md:grid flex-1 grid-cols-12 gap-4 text-sm">
               <div class="col-span-6 font-medium">{{ file.name }}</div>
-              <div class="col-span-2 text-gray-500">{{ formatDate(file.updatedAt) }}</div>
+              <div class="col-span-2 text-gray-500">{{ file.updatedAt }}</div>
               <div class="col-span-2 text-gray-500">Text Document</div>
               <div class="col-span-2 text-gray-500">1Kb</div>
             </div>
             <!-- Mobile Layout -->
             <div class="md:hidden flex-1 min-w-0">
               <div class="font-medium text-sm truncate">{{ file.name }}</div>
-              <div class="text-xs text-gray-500 mt-1">{{ formatDate(file.updatedAt) }}</div>
+              <div class="text-xs text-gray-500 mt-1">{{ file.updatedAt }}</div>
             </div>
           </div>
         </div>

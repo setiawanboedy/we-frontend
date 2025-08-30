@@ -23,3 +23,14 @@ export interface FolderItem {
   updateAt: string
   parentId?: string | null
 }
+
+export interface FileItem {
+  id: string
+  name: string
+  size: number | null
+  icon: string
+  path?: string
+  updatedAt: string
+  folderId: string
+  mimeType: string | null
+}

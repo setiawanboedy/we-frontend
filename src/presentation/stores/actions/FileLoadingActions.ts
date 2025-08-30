@@ -2,6 +2,7 @@ import type { ApplicationFileService } from '@/application/services/ApplicationF
 import type { FileState } from '../state/FileState'
 import type { FileDto } from '@/application/dto/FileDto'
 import type { IFileDataService } from '@/domain/interfaces/IFileServices'
+import { convertFileToUI } from '@/shared/utils/fileHelpers'
 
 export class FileLoadingActions implements IFileDataService {
   constructor(
@@ -16,7 +17,7 @@ export class FileLoadingActions implements IFileDataService {
 
     try {
       const files = await this.appService.getFilesByFolder(folderId)
-      this.state.files.value = files
+      this.state.files.value = files.map(convertFileToUI)
       return files
     } catch (error) {
       this.state.fileError.value = error instanceof Error ? error.message : 'Failed to load files'

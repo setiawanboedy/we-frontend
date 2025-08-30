@@ -5,6 +5,7 @@ import { ResultFormatter } from '@/shared/utils/ResultFormatter'
 import type { IFileDataService } from '@/domain/interfaces/IFileServices'
 import { getFolderService } from '@/di/InjectionRegistry'
 import type { ApplicationFolderService } from '@/application/services/ApplicationFolderService'
+import { FileMappingService } from '@/application/services/FileMappingService'
 
 export class FileActions {
   constructor(
@@ -121,7 +122,7 @@ export class FileActions {
 
       const index = this.state.files.value.findIndex((f) => f.id === fileId)
       if (index !== -1) {
-        this.state.files.value[index] = file
+        this.state.files.value[index] = FileMappingService.dtoToFileItem(file)
       }
 
       return ResultFormatter.success(file, 'File berhasil diupdate')
@@ -169,7 +170,7 @@ export class FileActions {
         return ResultFormatter.error(new Error('File not found'), 'rename file')
       }
 
-      const currentPath = currentFile.path
+      const currentPath = currentFile.path!
       const lastSlashIndex = currentPath.lastIndexOf('/')
       const directoryPath = lastSlashIndex >= 0 ? currentPath.substring(0, lastSlashIndex) : ''
 
