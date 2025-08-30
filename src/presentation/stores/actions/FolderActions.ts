@@ -102,24 +102,6 @@ export class FolderActions {
     }
   }
 
-  // async renameFolder(folderId: string, newName: string): Promise<any> {
-  //   try {
-  //     await this.applicationService.updateFolder(folderId, { name: newName })
-
-  //     const folder = this.state.currentFolderChildren.value.find((f) => f.id === folderId)
-  //     if (folder) folder.name = newName
-
-  //     if (this.state.folderHierarchy.value) {
-  //       await this.loadingActions.loadSidebarFolders()
-  //     }
-
-  //     return ResultFormatter.success('success', 'Folder berhasil di-rename')
-  //   } catch (error) {
-  //     return ResultFormatter.error(error, 'rename folder')
-  //   }
-  // }
-
-
   async updateFolder(folderId: string, data: UpdateFolderRequest): Promise<any> {
     try {
       this.state.isUpdating.value = true

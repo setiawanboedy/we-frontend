@@ -63,7 +63,6 @@ export class FolderRepository implements IFolderRepository {
     const response = await folderApiService.updateFolder(id, {
       name: data.name,
       path: data.path,
-      parentId: data.parentId === null ? undefined : data.parentId,
     })
 
     if (!response.success || !response.data) {
@@ -90,7 +89,7 @@ export class FolderRepository implements IFolderRepository {
 
  async search(query: SearchFolderParams): Promise<FolderEntity[]> {
     const response = await folderApiService.searchFolders(query)
-
+    
     if (!response.success || !response.data) {
       throw new Error(response.error || 'Failed to search files')
     }

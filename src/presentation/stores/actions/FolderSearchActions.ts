@@ -18,9 +18,11 @@ export class FolderSearchActions {
       const queryParams: SearchFolderParams = {
         name: query,
         limit: 10,
-        offset: 1
+        offset: 0
       }
+      
       const folders = await this.appFolderService.searchFolders(queryParams)
+      
       this.state.searchResults.value = FolderMappingService.dtosToFolderItems(folders)
       this.state.searchQuery.value = query
       this.state.isSearchMode.value = true

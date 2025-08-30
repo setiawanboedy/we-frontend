@@ -25,7 +25,7 @@ export class ApplicationFileService {
   async getFilesByFolder(folderId: string): Promise<FileDto[]> {
     try {
       const files = await this.getFilesByFolderUseCase.execute(folderId)
-      return FileMappingService.toDtoList(files)
+      return FileMappingService.entitiesToDtos(files)
     } catch (error) {
       throw new Error(
         `Failed to get files by folder: ${error instanceof Error ? error.message : 'Unknown error'}`,
@@ -95,7 +95,7 @@ export class ApplicationFileService {
   async searchFiles(query: SearchFileParams): Promise<FileDto[]> {
     try {
       const files = await this.searchFilesUseCase.execute(query)
-      return FileMappingService.toDtoList(files)
+      return FileMappingService.entitiesToDtos(files)
     } catch (error) {
       throw new Error(
         `Failed to search files: ${error instanceof Error ? error.message : 'Unknown error'}`,

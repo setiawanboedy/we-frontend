@@ -15,7 +15,7 @@ export class FileMappingService {
     }
   }
 
-  static toDtoList(entities: FileEntity[]): FileDto[] {
+  static entitiesToDtos(entities: FileEntity[]): FileDto[] {
     return entities.map((entity) => this.toDto(entity))
   }
 

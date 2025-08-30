@@ -7,7 +7,6 @@ import { FolderMappingService } from './FolderMappingService'
 import type { CreateFolderRequest, FolderDto, FolderWithChildrenDto, SearchFolderParams } from '../dto/FolderDto'
 import type { GetFolderByIdUseCase } from '@/domain/usecases/GetFolderByIdUseCase'
 import type { SearchFoldersUseCase } from '@/domain/usecases/SearchFoldersUseCase'
-import { folderApiService } from '../../infrastructure/api/folderApi';
 import type { UpdateFileRequest } from '../dto/FileDto'
 
 export class ApplicationFolderService {

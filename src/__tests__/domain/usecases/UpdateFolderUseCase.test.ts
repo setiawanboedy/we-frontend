@@ -40,7 +40,6 @@ describe('UpdateFolderUseCase', () => {
       const updateData: UpdateFolderRequest = {
         name: 'Updated Name',
         path: '/updated/path',
-        parentId: 'new-parent-id',
       }
 
       const expectedUpdatedFolder = new FolderEntity(
@@ -123,49 +122,6 @@ describe('UpdateFolderUseCase', () => {
       expect(result.path).toBe('/new/path')
     })
 
-    it('should update folder parentId only', async () => {
-      const folderId = 'folder-to-update'
-      const updateData: UpdateFolderRequest = {
-        parentId: 'new-parent-id',
-      }
-
-      const expectedUpdatedFolder = new FolderEntity(
-        folderId,
-        'Original Name',
-        '/original/path',
-        'new-parent-id',
-        1024,
-      )
-
-      mockRepository.update.mockResolvedValue(expectedUpdatedFolder)
-
-      const result = await useCase.execute(folderId, updateData)
-
-      expect(mockRepository.update).toHaveBeenCalledWith(folderId, updateData)
-      expect(result.parentId).toBe('new-parent-id')
-    })
-
-    it('should update folder to root level (null parentId)', async () => {
-      const folderId = 'folder-to-update'
-      const updateData: UpdateFolderRequest = {
-        parentId: undefined,
-      }
-
-      const expectedUpdatedFolder = new FolderEntity(
-        folderId,
-        'Original Name',
-        '/original/path',
-        null,
-        1024,
-      )
-
-      mockRepository.update.mockResolvedValue(expectedUpdatedFolder)
-
-      const result = await useCase.execute(folderId, updateData)
-
-      expect(mockRepository.update).toHaveBeenCalledWith(folderId, updateData)
-      expect(result.parentId).toBeNull()
-    })
 
     it('should throw error when repository update fails', async () => {
       const folderId = 'test-id'
@@ -191,7 +147,6 @@ describe('UpdateFolderUseCase', () => {
       const updateData: UpdateFolderRequest = {
         name: 'Special Folder @#$%',
         path: '/special/path_123.test',
-        parentId: 'parent-id_456',
       }
 
       const expectedUpdatedFolder = new FolderEntity(
@@ -243,7 +198,6 @@ describe('UpdateFolderUseCase', () => {
       const updateData: UpdateFolderRequest = {
         name: undefined,
         path: undefined,
-        parentId: undefined,
       }
 
       const expectedUpdatedFolder = new FolderEntity(
@@ -268,7 +222,6 @@ describe('UpdateFolderUseCase', () => {
       const updateData: UpdateFolderRequest = {
         name: null as any,
         path: null as any,
-        parentId: undefined,
       }
 
       const expectedUpdatedFolder = new FolderEntity(
@@ -293,7 +246,6 @@ describe('UpdateFolderUseCase', () => {
       const updateData: UpdateFolderRequest = {
         name: '',
         path: '',
-        parentId: '',
       }
 
       const expectedUpdatedFolder = new FolderEntity(
@@ -342,7 +294,6 @@ describe('UpdateFolderUseCase', () => {
     it('should handle folder move operation', async () => {
       const folderId = 'folder-to-move'
       const updateData: UpdateFolderRequest = {
-        parentId: 'new-parent-id',
         path: '/new-parent/folder-to-move',
       }
 

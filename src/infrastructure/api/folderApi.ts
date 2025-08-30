@@ -33,8 +33,9 @@ export class FolderApi {
   }
 
   async searchFolders(params: SearchFolderParams): Promise<ApiResponse<FolderDto[]>> {
+    
       const searchParams = new URLSearchParams()
-  
+      
       if (params.name) {
         searchParams.append('name', params.name)
       }
@@ -44,8 +45,10 @@ export class FolderApi {
       if (params.offset !== undefined) {
         searchParams.append('offset', params.offset.toString())
       }
-  
-      return apiClient.get<FolderDto[]>(`/files/search?${searchParams.toString()}`)
+      
+      const data = await apiClient.get<FolderDto[]>(`/folders/search?${searchParams.toString()}`)
+      
+      return data
     }
 }
 

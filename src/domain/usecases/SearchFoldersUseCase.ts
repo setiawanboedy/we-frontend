@@ -7,17 +7,17 @@ export class SearchFoldersUseCase {
   constructor(private readonly folderRepository: IFolderRepository) {}
 
   async execute(params: SearchFolderParams): Promise<FolderEntity[]> {
-    if (params.name && this.isValidQuery(params.name)) {
+    if (!params.name && !this.isValidQuery(params.name)) {
       return []
     }
     if (params.limit !== undefined && params.limit < 0) {
       throw new Error('Limit cannot be negative')
     }
-
+    
     if (params.offset !== undefined && params.offset < 0) {
       throw new Error('Offset cannot be negative')
     }
-
+    
     try {
       return await this.folderRepository.search(params)
     } catch (error) {
@@ -27,7 +27,10 @@ export class SearchFoldersUseCase {
     }
   }
 
-  private isValidQuery(query: string): boolean {
+  private isValidQuery(query?: string): boolean {
+    if (!query) {
+      return false
+    }
     return query.length >= 1 && query.length <= 100
   }
 }

@@ -16,7 +16,7 @@ export class FileSearchActions {
       const queryParams: SearchFileParams = {
         name: query,
         limit: 10,
-        offset: 1
+        offset: 0
       }
       const files = await this.appFileService.searchFiles(queryParams)
       this.state.searchResults.value = files

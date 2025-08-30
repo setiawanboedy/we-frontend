@@ -399,7 +399,6 @@ describe('FolderRepository', () => {
       const updateData: UpdateFolderRequest = {
         name: 'Updated Name',
         path: '/updated/path',
-        parentId: 'new-parent-id',
       }
       const mockFolder = {
         id: folderId,
@@ -428,7 +427,6 @@ describe('FolderRepository', () => {
       expect(mockFolderApiService.updateFolder).toHaveBeenCalledWith(folderId, {
         name: updateData.name,
         path: updateData.path,
-        parentId: updateData.parentId,
       })
       expect(mockFolderMappingService.folderToEntity).toHaveBeenCalledWith(mockFolder)
       expect(result).toEqual(mockEntity)
@@ -439,7 +437,6 @@ describe('FolderRepository', () => {
       const updateData: UpdateFolderRequest = {
         name: 'Updated Name',
         path: '/updated/path',
-        parentId: undefined,
       }
       const mockFolder = {
         id: folderId,

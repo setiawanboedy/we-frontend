@@ -396,6 +396,7 @@ const formatDate = (dateString: string): string => {
               folderStore.selectedMainFolderId === folder.id ? 'bg-blue-100' : 'hover:bg-blue-50',
             ]"
             @click="selectFolder(folder)"
+            @dblclick="handleFolderSelect(folder)"
           >
             <i class="fas fa-folder text-yellow-500 w-5 mr-3 flex-shrink-0"></i>
             <!-- Desktop Layout -->
@@ -403,7 +404,7 @@ const formatDate = (dateString: string): string => {
               <div class="col-span-6 font-medium">{{ folder.name }}</div>
               <div class="col-span-2 text-gray-500">{{ folder.updateAt }}</div>
               <div class="col-span-2 text-gray-500">Folder</div>
-              <div class="col-span-2 text-gray-500">{{ folder.size }}</div>
+              <div class="col-span-2 text-gray-500"></div>
             </div>
             <!-- Mobile Layout -->
             <div class="md:hidden flex-1 min-w-0">
@@ -449,7 +450,9 @@ const formatDate = (dateString: string): string => {
           sortedFiles.length === 0 &&
           folderStore.selectedFolderId &&
           !folderStore.isLoadingChildren &&
-          !fileStore.isLoading
+          !fileStore.isLoading &&
+          !folderStore.isSearchMode &&
+          !fileStore.isSearchMode
         "
         class="flex items-center justify-center py-16"
       >

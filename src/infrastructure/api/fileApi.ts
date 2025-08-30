@@ -39,7 +39,8 @@ export class FileApi {
     if (params.offset !== undefined) {
       searchParams.append('offset', params.offset.toString())
     }
-
+    console.log(params);
+    
     return apiClient.get<FileDto[]>(`/files/search?${searchParams.toString()}`)
   }
 }

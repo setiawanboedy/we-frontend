@@ -89,7 +89,7 @@ export class InjectionRegistry {
       })
 
       this.container.register<SearchFoldersUseCase>('searchFolderUseCase', () => {
-        const repository = this.container.get<FolderRepository>('fileRepository')
+        const repository = this.container.get<FolderRepository>('folderRepository')
         return new SearchFoldersUseCase(repository)
       })
 

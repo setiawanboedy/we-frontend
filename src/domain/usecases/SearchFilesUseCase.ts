@@ -7,7 +7,7 @@ export class SearchFilesUseCase {
 
   async execute(params: SearchFileParams): Promise<FileEntity[]> {
     // Validation
-    if (params.name && this.isValidQuery(params.name)) {
+    if (!params.name && !this.isValidQuery(params.name)) {
       return []
     }
     if (params.limit !== undefined && params.limit < 0) {
@@ -26,7 +26,10 @@ export class SearchFilesUseCase {
     }
   }
 
-  private isValidQuery(query: string): boolean {
+  private isValidQuery(query?: string): boolean {
+    if (!query) {
+      return false
+    }
     return query.length >= 1 && query.length <= 100
   }
 }
